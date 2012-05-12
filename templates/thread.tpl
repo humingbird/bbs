@@ -4,7 +4,7 @@
 	</head>
 	<body>
 		<h5>必要事項を記入して、作成ボタンを押してください</h5>
-		<form method="POST" action="controller/threadController.php">
+		<form method="POST" action="?page=thread&regist=1">
 			<div>タイトル</br>
 				<input type="text" name="title"></div>
 			</div>

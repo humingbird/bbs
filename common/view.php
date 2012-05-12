@@ -1,5 +1,4 @@
 <?php
-require_once('config/bbsConf.php');
 require_once( Config::$smarty_dir. '/Smarty.class.php' );
 
 /**

@@ -1,5 +1,6 @@
 <?php
 require_once('common/view.php');
+require_once('/common/util.php');
 require_once('model/threadInfo.php');
 require_once('model/comment.php');
 
@@ -7,12 +8,21 @@ class indexController{
 	public $view;
 	private $threadInfo;
 	private $comment;
-	
+	private $util;
 	//コンストラクタ
 	function __construct(){
 		$this->view = new View;
+		$this->util = new Util;
+		
 		$this->threadInfo = new threadInfo;
 		$this->comment = new comment;
+		
+		$path = $_GET['regist'];
+		if($path == 1){
+			$this->regist();
+		}else{
+			$this->exec();
+		}
 	}
 	
 	/**
@@ -37,7 +47,16 @@ class indexController{
 		$this->view->display('index',array('list'=>$list,'comment'=>$commentList));
 	}
 	
-	//modelクラスから最新スレッドの情報を取得
-	//取得したスレッドidから記事情報を取得してくる
-	//よしなに形を作ったら、smartyにassign,index.tplを呼ぶ
+	public function regist(){
+		//postされた要素を取得
+		$postData = $_POST;
+		
+		//バリデーション処理
+			$postData = $this->util->checkParams($postData);
+		//update
+			$this->comment->insert($postData['threadId'],$postData);
+		
+		//topページにリダイレクト
+			header("Location:".Config::$home_url);
+	}
 }

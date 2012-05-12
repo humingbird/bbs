@@ -7,11 +7,30 @@
 class Util{
 	
 	/**
+	 * バリデーション処理
+	 *
+	 * @params array  $postData  postされたスレッドデータ
+	 * @params string $page      エラー時にリダイレクトするページ名
+	 * @return array 			チェックを通ったデータ
+	 */
+	public function checkParams($postData,$page=null){
+			$this->checkUndefined($postData,$page);
+			$this->countWords($postData,$page);
+			$this->checkEmail($postData['email'],$page);
+			
+			foreach($postData as $key=>$value){
+				$postData[$key] = htmlspecialchars($value);
+			}
+			return $postData;
+		}
+	
+	/**
 	 * 必須項目の空欄チェック
 	 *
-	 * @params array $postData  postされたスレッドデータ
+	 * @params array  $postData  postされたスレッドデータ
+	 * @params string $page      エラー時にリダイレクトするページ名
 	 */
-	public function checkUndefined($postData){
+	public function checkUndefined($postData,$page){
 		$check = false;
 
 		if($postData['title'] === ""){
@@ -28,8 +47,13 @@ class Util{
 				$error = $error.$key.'='.$value.'&';
 			}
 			$error = rtrim($error,'&');
-		
-			header("Location:".Config::$home_url.'thread.html?'.$error);
+			
+			if($page){
+				$param = '?page='.$page.'&'.$error;
+			}else{
+				$param = '?'.$error;
+			}
+			header("Location:".Config::$home_url.$param);
 			exit;
 		}
 	}
@@ -38,8 +62,9 @@ class Util{
 	 * 文字数制限チェック
 	 *
 	 * @params array $postData  postされたスレッドデータ
+	 * @params string $page      エラー時にリダイレクトするページ名
 	 */
-	public function countWords($postData){
+	public function countWords($postData,$page){
 		$check = false;
 			
 		if(array_key_exists('title',$postData)){
@@ -67,7 +92,12 @@ class Util{
 			}
 			$error = rtrim($error,'&');
 			
-			header("Location:".Config::$home_url.'thread.html?'.$error);
+			if($page){
+				$param = '?page='.$page.'&'.$error;
+			}else{
+				$param = '?'.$error;
+			}
+			header("Location:".Config::$home_url.$param);
 			exit;
 		}
 	}
@@ -77,10 +107,10 @@ class Util{
 	 *
 	 * @params string $email  postされたメールアドレス
 	 */
-	public function checkEmail($email){
+	public function checkEmail($email,$page){
 		$check = false;
 		
-		if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $email)) {
+		if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $email) && $email) {
 			$check = true;
 			$errorComment['email'] = 3;
 		}
@@ -90,8 +120,13 @@ class Util{
 				$error = $error.$key.'='.$value.'&';
 			}
 			$error = rtrim($error,'&');
-				
-			header("Location:".Config::$home_url.'thread.html?'.$error);
+			
+			if($page){
+				$param = '?page='.$page.'&'.$error;
+			}else{
+				$param = '?'.$error;
+			}
+			header("Location:".Config::$home_url.$param);
 			exit;
 		}
 	}

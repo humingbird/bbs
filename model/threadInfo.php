@@ -1,5 +1,5 @@
 <?php
-require('/common/dbConnection.php');
+require(Config::$base_path.'/common/dbConnection.php');
 
 /**
  * thread_infoテーブルのdaoクラス
@@ -54,7 +54,7 @@ class threadInfo{
 	public function selectThreadList(){
 		
 		//$params = array(':limit'=>$limit);
-		$sql = 'select * from thread_info order by id limit 3';
+		$sql = 'select * from thread_info order by id desc limit 3';
 				
 		//DBの接続
 		$db = new DbConnection;
@@ -63,6 +63,26 @@ class threadInfo{
 		$stmt = $conn->prepare($sql);
     	$stmt->execute();
 		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $row;
+	}
+	
+	/**
+	 * idから情報を取得する
+	 * @params int $id スレッドid
+	 * @return array   スレッド情報
+	 */
+	public function selectForId($id){
+		$params = array(':id'=>$id);
+		$sql = 'select * from thread_info where id=:id';
+		
+		//DBの接続
+		$db = new DbConnection;
+		$conn = $db->connect();
+
+		$stmt = $conn->prepare($sql);
+    	$stmt->execute($params);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		
 		return $row;
 	}

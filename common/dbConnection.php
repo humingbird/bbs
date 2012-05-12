@@ -1,5 +1,4 @@
 <?php
-require_once('config/bbsConf.php');
 /**
  * DBの接続設定をするクラス
  */

@@ -1,8 +1,8 @@
 <?php
-require_once("../config/bbsConf.php");
-require_once("../common/util.php");
-require_once("../model/threadInfo.php");
-require_once("../model/comment.php");
+require_once(Config::$base_path."/common/view.php");
+require_once(Config::$base_path."/common/util.php");
+require_once(Config::$base_path."/model/threadInfo.php");
+require_once(Config::$base_path."/model/comment.php");
 
 /**
  * 新規スレッド作成
@@ -15,20 +15,31 @@ require_once("../model/comment.php");
 		
 		//コンストラクタ
 		function __construct(){
-			//modelクラスの呼び出し
+			$this->view = new View;
 			$this->util = new Util;
+			//modelクラスの呼び出し
 			$this->threadInfo= new threadInfo;
 			$this->comment = new comment;
+			
+			$path = $_GET['regist'];
+			if($path ==1){
+				$this->regist();
+			}else{
+				$this->exec();
+			}
 		}
 		
+		function exec(){
+			$this->view->display('thread',array());
+		}
 		/**
 		 * 処理の実行
 		 */
-		function exec(){
+		function regist(){
 			$postData = $_POST;
 			
 			//バリデーションチェック
-			$postData = $this->checkParams($postData);
+			$postData = $this->util->checkParams($postData,'thread');
 			
 			//modelクラスを呼び出して、thread_infoテーブルに基本情報をinsert
 			//登録したthread_idを基にcommentテーブルにもinsert
@@ -37,7 +48,7 @@ require_once("../model/comment.php");
 			
 			//登録失敗したときはリダイレクト
 			if(!$flag){
-				header("Location:".Config::$home_url.'/thread.html?db=1');
+				header("Location:".Config::$home_url.'/?page=thread&db=1');
 				exit;
 			}
 			//登録したthreadIdを取得してくる
@@ -50,26 +61,6 @@ require_once("../model/comment.php");
 			header("Location:".Config::$home_url);
 
 		}
-		/**
-		 * バリデーション処理
-		 *
-		 * @params array $postData  postされたスレッドデータ
-		 * @return array 			チェックを通ったデータ
-		 */
-		public function checkParams($postData){
-			
-			$this->util->checkUndefined($postData);
-			$this->util->countWords($postData);
-			$this->util->checkEmail($postData['email']);
-			
-			foreach($postData as $key=>$value){
-				$postData[$key] = htmlspecialchars($value);
-			}
-			return $postData;
-		}
 	}
 
-//あんまり形よくないけどこれでインスタンス生成
-$instance = new threadController;
-$instance->exec();
 ?>

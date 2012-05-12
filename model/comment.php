@@ -27,9 +27,12 @@ class comment{
 			
 		$params = array(':thread_id'=>$threadId,':comment'=>$data);
 		
-		$sql = 'insert into `comment`(`thread_id`,`comment`,`created`,`updated`)
-			values(:thread_id,:comment,NOW(),NOW())';
-			
+		if($pastData){
+			$sql = 'update `comment` set `comment`=:comment where `thread_id`=:thread_id';
+		}else{
+			$sql = 'insert into `comment`(`thread_id`,`comment`,`created`,`updated`)
+				values(:thread_id,:comment,NOW(),NOW())';
+		}
 		$state = $this->pdoExecute($sql,$params);
 		
 		return $state;
