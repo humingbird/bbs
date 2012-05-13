@@ -1,8 +1,8 @@
 <?php
-require_once('/common/view.php');
-require_once('/common/util.php');
-require_once('model/threadInfo.php');
-require_once('model/comment.php');
+require_once(Config::$base_path.'/common/view.php');
+require_once(Config::$base_path.'/common/util.php');
+require_once(Config::$base_path.'/model/threadInfo.php');
+require_once(Config::$base_path.'/model/comment.php');
 
 /**
  * 一覧表示
