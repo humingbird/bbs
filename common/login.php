@@ -27,4 +27,18 @@ class fbLogin {
 		}
 	}
 
+	/**
+ 	 * ログイン用のurlを生成する
+	 *
+	 * @return string fbのログイン（アプリ認証）ページ
+	 */
+	public function getLoginUrl(){
+		$url = $this->fb->getLoginUrl();
+		if($url){
+			return $url;
+		}else{
+			return false;
+		}
+	}
+
 }

@@ -1,5 +1,5 @@
 <?php
-require_once("config/bbsConf.php");
+require_once("/var/www/bbs/config/bbsConf.php");
 
 //autoload
 spl_autoload_register(array('router','autoload'));

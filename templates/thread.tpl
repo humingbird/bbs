@@ -1,8 +1,11 @@
 <html>
 	<head>
 		<title>新規スレッド作成</title>
+		<script type="text/javascript" src = "bbs.js"></script>
 	</head>
-	<body>
+	<body onload="displayError()" style="background-color:lightgray;">
+		<div id="error"></div>
+		<h3>新規スレッド作成</h3>
 		<h5>必要事項を記入して、作成ボタンを押してください</h5>
 		<form method="POST" action="?page=thread&regist=1">
 			<div>タイトル</br>
@@ -19,5 +22,7 @@
 			</div>
 			<div><input type="submit" value="作成"></div>
 		</form>
+
+		<a href="{$home}">topに戻る</a>
 	</body>
 </html>

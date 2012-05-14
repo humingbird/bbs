@@ -1,6 +1,7 @@
 <?php
 class Config{
 	
+	const MAXCOUNT = 1000;
 	public static $base_path ="";
 	public static $home_url = "";
 	
@@ -18,5 +19,9 @@ class Config{
 	public static $dsn = '';
 	public static $user='';
 	public static $password=;
+
+	//memcache
+	public static $mem_host = '';
+	public static $mem_port =;
 }
 	

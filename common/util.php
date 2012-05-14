@@ -48,8 +48,10 @@ class Util{
 			}
 			$error = rtrim($error,'&');
 			
-			if($page){
+			if($page != 'list'){
 				$param = '?page='.$page.'&'.$error;
+			}else if($page === 'list'){
+				$param = '?page='.$page.'&id='.$postData['threadId'].'&'.$error;
 			}else{
 				$param = '?'.$error;
 			}

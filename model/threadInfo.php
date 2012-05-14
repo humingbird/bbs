@@ -1,10 +1,23 @@
 <?php
 require(Config::$base_path.'/common/dbConnection.php');
+require(Config::$base_path.'/common/cache.php');
 
 /**
  * thread_infoテーブルのdaoクラス
  */
 class threadInfo{
+
+	const NEW_THREAD = 'new_thread';
+	const THREAD  = 'thread_';
+	
+	private $memcache;
+
+	//コンストラクタ
+	public function __construct(){
+		$cache = new cache;
+		$this->memcache = $cache->connect();
+	}
+
 	
 	/**
 	 * postされたスレッドデータを新規登録する
@@ -20,7 +33,11 @@ class threadInfo{
 			values(:title,:name,:email,NOW(),NOW())';
 			
 		$state = $this->pdoExecute($sql,$params);
-		
+
+		//新規登録後はリストが変わるのでキャッシュを削除する
+		if($pastData = $this->memcache->get(self::NEW_THREAD)){
+			$this->memcache->delete(self::NEW_THREAD);
+		}
 		return $state;
 	}
 	
@@ -39,7 +56,7 @@ class threadInfo{
 		$conn = $db->connect();
 
 		$stmt = $conn->prepare($sql);
-    	$stmt->execute($params);
+    		$stmt->execute($params);
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		
 		return $row['id'];
@@ -51,19 +68,26 @@ class threadInfo{
 	 * @params int $limit    何件分取得するか
 	 * @return array         スレッド情報
 	 */
-	public function selectThreadList(){
+	public function selectThreadList($limit = 3){
 		
-		//$params = array(':limit'=>$limit);
-		$sql = 'select * from thread_info order by id desc limit 3';
-				
-		//DBの接続
-		$db = new DbConnection;
-		$conn = $db->connect();
+		//memcacheにデータが無いか探しに行く
+		
+		if(!$row = $this->memcache->get(self::NEW_THREAD)){
+			$sql = sprintf('select * from thread_info order by id desc limit %d',$limit);	
+			
+			//DBの接続
+			$db = new DbConnection;
+			$conn = $db->connect();
 
-		$stmt = $conn->prepare($sql);
-    	$stmt->execute();
-		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		
+			$stmt = $conn->prepare($sql);
+    			$stmt->execute();
+
+			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			//取得したデータをmemcacheにセットする
+			$this->memcache->set(self::NEW_THREAD,$row);
+		}
+
 		return $row;
 	}
 	
@@ -73,17 +97,20 @@ class threadInfo{
 	 * @return array   スレッド情報
 	 */
 	public function selectForId($id){
-		$params = array(':id'=>$id);
-		$sql = 'select * from thread_info where id=:id';
+		if(!$row = $this->memcache->get(self::THREAD.$id)){
+			$params = array(':id'=>$id);
+			$sql = 'select * from thread_info where id=:id';
 		
-		//DBの接続
-		$db = new DbConnection;
-		$conn = $db->connect();
+			//DBの接続
+			$db = new DbConnection;
+			$conn = $db->connect();
 
-		$stmt = $conn->prepare($sql);
-    	$stmt->execute($params);
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+			$stmt = $conn->prepare($sql);
+    			$stmt->execute($params);
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		
+			$this->memcache->set(self::THREAD.$id,$row);
+		}
 		return $row;
 	}
 	

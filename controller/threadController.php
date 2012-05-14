@@ -30,7 +30,7 @@ require_once(Config::$base_path."/model/comment.php");
 		}
 		
 		function exec(){
-			$this->view->display('thread',array());
+			$this->view->display('thread',array('home'=>Config::$home_url));
 		}
 		/**
 		 * 処理の実行

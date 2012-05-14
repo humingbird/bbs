@@ -1,28 +1,34 @@
 <html>
 	<head>
 		<title>掲示板</title>
+		<script type="text/javascript" src = "bbs.js"></script>
+		<link type="text/css" href="bbs.css" rel="stylesheet">
 	</head>
-	<body>
+	<body onload="displayError()">
+		<div id="error"></div>
+		<h3>掲示板</h3>
 		<!-- インデックス表示 -->
 		{foreach from=$list key=id item=val}
-			<div>１つのスレッドの大枠
-				<div>スレッドid:{$val.id}  <b>{$val.title}</b></div>
+			<div id="thread">
+				<h4>No:{$val.id}  <a href="?page=list&id={$val.id}">{$val.title}</a></h4>
 				<!-- ここから最大三件表示 -->
 				{foreach from=$comment[$val.id] key=k item=c}
-					<div>
-						各スレについたコメントの大枠
-						<div>ID:{$k +1} 名前:{if $c.email}<a href='{$c.email}}'>{/if}{if $c.name}{$c[$k].name}{else}ななしさん{/if}{if $c.email}</a>{/if}{$c.created}</div>
+					<div class="comment" id="c_{$k + 1}">
+						<div>{$k +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>ななしさん</span>{/if}{if $c.email}</a>{/if}  投稿日時:{$c.created}</div>
 						<div>
 							{$c.description}
 						</div>
 					</div>
+					<hr>
 				{/foreach}
 				<!-- for文ここまで -->
+				<a href="?page=list&id={$val.id}">全て表示する</a>
 			</div>
 			<!-- ここからコメント投稿 -->
-			<div>
-				<form method="POST" action="?regist=1">
-					<div>名前<input type="text" name="name">email
+			<div id="form">
+				{if $login && $flag[$k] !=1}
+				<form method="POST" action="?regist=1" id = "input_comment">
+					<div id="form_name">名前<input type="text" name="name">email
 					<input type="text" name="email"></div>
 					<div>コメント</br>
 						<textarea name="comment" cols=40 rows=4 wrap="hard"></textarea>
@@ -30,12 +36,18 @@
 					<div><input type="submit" value="投稿"></div>
 					<input type="hidden" name="threadId" value="{$val.id}">
 				</form>
-			<div>
-			<div><a href="?page=list&id={$val.id}">全て表示する</a></div>
+				{else if !$login}
+					コメントを書き込むにはログインが必要です</br>
+					<a href="{$login_url}">facebookログイン</a>
+				{else}
+					このスレッドの書き込みは1000件を越えたので書き込みできません。
+				{/if}
+			</div>
+			<!-- ここまでコメント投稿 -->
 		{/foreach}
 		<!-- インデックス表示ここまで -->
 		<!-- スレッド作成遷移 -->
-		<div style="background-color:lightgray;"><a href="?page=thread">新規スレッド作成</a></div>
+		<div id="footer"><a href="?page=thread">新規スレッド作成</a></div>
 		<!-- スレッド作成遷移ここまで -->
 	</body>
 </html>
