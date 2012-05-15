@@ -100,11 +100,22 @@ class listController{
 	 * @return array           表示件数分のコメント
 	 */
 	 public function setDisplayComment($comment,$limit){
-	 	if($limit){
+		if($limit == 50){
+			foreach($comment as $key=>$value){
+				$date[$key]= $value['created'];
+			}
+			arsort($date);
+			foreach($date as $key=>$value){
+				$sorted[] = $comment[$key];
+			}
+			$comment = $sorted;
 	 		$result = array_chunk($comment,(int)$limit,TRUE);
 	 		$comment = $result[0];
-	 	}
-	 	
+		}else if($limit){
+		 	$result = array_chunk($comment,(int)$limit,TRUE);
+	 		$comment = $result[0];
+		}
+
 	 	return $comment;
 	 }
 	public function error(){
