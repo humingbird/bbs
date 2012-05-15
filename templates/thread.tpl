@@ -2,6 +2,7 @@
 	<head>
 		<title>新規スレッド作成</title>
 		<script type="text/javascript" src = "bbs.js"></script>
+		<link src="bbs.css" rel="stylesheet" type="text/stylesheet">
 	</head>
 	<body onload="displayError()" style="background-color:lightgray;">
 		<div id="error"></div>

@@ -1,9 +1,11 @@
 <?php
 require_once(Config::$base_path.'/common/view.php');
-require_once(Config::$base_path.'/common/login.php');
 require_once(Config::$base_path.'/common/util.php');
 require_once(Config::$base_path.'/model/threadInfo.php');
 require_once(Config::$base_path.'/model/comment.php');
+if(!Config::$debug){
+	require_once(Config::$base_path.'/common/login.php');
+}
 
 /**
  * topページ用のコントローラクラス
@@ -18,7 +20,9 @@ class indexController{
 
 	//コンストラクタ
 	function __construct(){
-		$this->fb = new fbLogin;
+		if(!Config::$debug){
+			$this->fb = new fbLogin;
+		}
 		
 		$this->view = new View;
 		$this->util = new Util;
@@ -46,12 +50,16 @@ class indexController{
 	 */
 	function exec(){
 		//ログインしているかどうか
-		$login = $this->fb->checkLogin();
+		if(!Config::$debug){
+			$login = $this->fb->checkLogin();
 
-		if(!$login){
-			$url = $this->fb->getLoginUrl();
+			if(!$login){
+				$url = $this->fb->getLoginUrl();
+			}else{
+				$url='';
+			}
 		}else{
-			$url='';
+			$login = 1; //ローカル上では常にログイン状態にする
 		}
 
 		$list = $this->threadInfo->selectThreadList();
@@ -66,14 +74,20 @@ class indexController{
 			$flag[$key] = 0;
 			if(count($value)>=3){
 				$arr =  array_chunk($value,3,TRUE);
+				
+				//コメントの内容チェック（urlリンク）
+				$arr[0] = $this->util->checkCommentLink($arr[0]);
+				$arr[0] = $this->util->checkComment($arr[0]);
 				$commentList[$key] = $arr[0];
-
 				if(count($value) > Config::MAXCOUNT){
 					$flag[$key] = 1;
 				}
 			}
 		}
-		$this->view->display('index',array('list'=>$list,'comment'=>$commentList,'login'=>$login,'login_url'=>$url,'flag'=>$flag));
+		//スレッド一覧用
+		$titleList = $this->threadInfo->selectThreadList(10);
+
+		$this->view->display('index',array('list'=>$list,'comment'=>$commentList,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'title'=>$titleList));
 	}
 
 	/**

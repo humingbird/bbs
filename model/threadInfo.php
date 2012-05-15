@@ -9,6 +9,7 @@ class threadInfo{
 
 	const NEW_THREAD = 'new_thread';
 	const THREAD  = 'thread_';
+	const TITLE_LIST = 'title_list';
 	
 	private $memcache;
 
@@ -85,7 +86,11 @@ class threadInfo{
 			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 			//取得したデータをmemcacheにセットする
-			$this->memcache->set(self::NEW_THREAD,$row);
+			if($limit == 10){
+				$this->memcache->set(self::TITLE_LIST,$row);
+			}else{
+				$this->memcache->set(self::NEW_THREAD,$row);
+			}
 		}
 
 		return $row;
@@ -97,7 +102,7 @@ class threadInfo{
 	 * @return array   スレッド情報
 	 */
 	public function selectForId($id){
-		if(!$row = $this->memcache->get(self::THREAD.$id)){
+		//if(!$row = $this->memcache->get(self::THREAD.$id)){
 			$params = array(':id'=>$id);
 			$sql = 'select * from thread_info where id=:id';
 		
@@ -109,8 +114,8 @@ class threadInfo{
     			$stmt->execute($params);
 			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		
-			$this->memcache->set(self::THREAD.$id,$row);
-		}
+			//$this->memcache->set(self::THREAD.$id,$row);
+		//}
 		return $row;
 	}
 	

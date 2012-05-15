@@ -1,9 +1,11 @@
 <?php
 require_once(Config::$base_path.'/common/view.php');
-require_once(Config::$base_path.'/common/login.php');
 require_once(Config::$base_path.'/common/util.php');
 require_once(Config::$base_path.'/model/threadInfo.php');
 require_once(Config::$base_path.'/model/comment.php');
+if(!Config::$debug){
+	require_once(Config::$base_path.'/common/login.php');
+}
 
 /**
  * 一覧表示
@@ -17,8 +19,9 @@ class listController{
 	private $fb;
 	
 	public function __construct(){
-		$this->fb = new fbLogin;
-
+		if(!Config::$debug){
+			$this->fb = new fbLogin;
+		}
 		$this->util = new Util;
 		$this->view = new View;
 
@@ -28,18 +31,28 @@ class listController{
 		$path = $_GET['regist'];
 		if($path == 1){
 			$this->regist();
-		}else{	
-			$this->exec();
+		}else{ 
+			$limit = $_GET['limit'];
+			$this->exec($limit);
 		}
 	}
 	
-	public function exec(){
+	/**
+	 * スレッド記事の表示
+	 *
+	 * @params string $limit  表示件数
+	 */
+	public function exec($limit = null){
 		//ログインしているかどうか
-		$login = $this->fb->checkLogin();
-		if(!$login){
-			$url = $this->fb->getLoginUrl();
+		if(!Config::$debug){
+			$login = $this->fb->checkLogin();
+			if(!$login){
+				$url = $this->fb->getLoginUrl();
+			}else{
+				$url='';
+			}
 		}else{
-			$url='';
+			$login =1;
 		}
 		//threadIdをもとにthread_infoとcommentテーブルの情報を取得する
 		$threadId = $_GET['id'];
@@ -51,10 +64,14 @@ class listController{
 		$commentData = $this->comment->select($threadId);
 		$comment = unserialize($commentData['comment']);
 
+		$comment = $this->util->checkCommentLink($comment);
+		$comment = $this->util->checkComment($comment);
 		$flag = 0;
 		if(count($comment)>Config::MAXCOUNT){
 			$flag = 1;
 		}
+		//表示件数を制限する（nullの場合は何もしないで返す）
+		$comment = $this->setDisplayComment($comment,$limit);
 
 		$this->view->display('list',array('info'=>$info,'comment'=>$comment,'login'=>$login,'login_url'=>$url,'flag'=>$flag));
 	}
@@ -75,6 +92,21 @@ class listController{
 			header("Location:".Config::$home_url.'?page=list&id='.$postData['threadId']);
 	}
 	
+	/**
+	 * コメントの表示件数を制限する
+	 * 
+	 * @params arrya  $comment コメントデータ
+	 * @params stirng $limit   表示件数
+	 * @return array           表示件数分のコメント
+	 */
+	 public function setDisplayComment($comment,$limit){
+	 	if($limit){
+	 		$result = array_chunk($comment,(int)$limit,TRUE);
+	 		$comment = $result[0];
+	 	}
+	 	
+	 	return $comment;
+	 }
 	public function error(){
 		$this->view->display('error',array('home'=>Config::$home_url));
 	}

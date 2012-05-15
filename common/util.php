@@ -132,5 +132,36 @@ class Util{
 			exit;
 		}
 	}
+	
+	/**
+	 * 改行追加とコメント中にurlのようなものがあったらリンクを張る
+	 *
+	 * @params array   $commentList  コメント一覧
+	 * @return arrya                 処理の終わったコメント一覧
+	 */
+	public function checkCommentLink($commentList){
+		foreach($commentList as $key=>$val){
+			//urlらしきものが入っていたらリンクタグを追加
+			$escape = preg_quote('-._~%:/?#[]@!$&\'()*+,;=', '/');
+			$pattern = '/((http|https):\/\/[0-9a-z' . $escape . ']+)/i';
+			$req = '<a href="\\1">\\1</a>';
+				
+			$commentList[$key]['description'] = preg_replace($pattern,$req,$val['description']);
+		}
+		return $commentList;
+	}
+	/**
+	 * 改行</br>追加
+	 *
+	 * @params array $comment  コメントデータ
+	 * @return array           チェックしたコメント
+	 */
+	public function checkComment($comment){
+		foreach($comment as $key=>$value){
+			$comment[$key]['description'] = preg_replace('/\\n/','</br>',$value['description']);
+		}
+		return $comment;
+	}
+	
 }
  

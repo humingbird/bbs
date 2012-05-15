@@ -36,3 +36,8 @@ body{
 	color:red;
 	font-weight:bold;
 }
+
+#thread_list{
+	width:600px;
+	background-color:ghostwhite;
+}

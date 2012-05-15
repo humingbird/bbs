@@ -7,6 +7,14 @@
 	<body onload="displayError()">
 		<div id="error"></div>
 		<h3>掲示板</h3>
+		<!-- スレッド一覧表示 -->
+		<div id="thread_list">
+			>>スレッド一覧(最新10件表示）</br>
+			{foreach from=$title key=id item=val}
+				<a href="?page=list&id={$val.id}">{$val.title}</a>    
+			{/foreach}
+		</div>
+		<!-- スレッド一覧表示ここまで -->
 		<!-- インデックス表示 -->
 		{foreach from=$list key=id item=val}
 			<div id="thread">
@@ -22,7 +30,8 @@
 					<hr>
 				{/foreach}
 				<!-- for文ここまで -->
-				<a href="?page=list&id={$val.id}">全て表示する</a>
+				<a href="?page=list&id={$val.id}">全て表示する</a>  <a href="?page=list&id={$val.id}&limit=50">最新50件</a>  <a href="?page=list&id={$val.id}&limit=100">1-100</a>
+				  <a href="#">板のトップ</a>  <a href="">リロード</a>
 			</div>
 			<!-- ここからコメント投稿 -->
 			<div id="form">
@@ -31,7 +40,7 @@
 					<div id="form_name">名前<input type="text" name="name">email
 					<input type="text" name="email"></div>
 					<div>コメント</br>
-						<textarea name="comment" cols=40 rows=4 wrap="hard"></textarea>
+						<textarea name="comment" cols=40 rows=4></textarea>
 					</div>
 					<div><input type="submit" value="投稿"></div>
 					<input type="hidden" name="threadId" value="{$val.id}">
