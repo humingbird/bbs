@@ -63,7 +63,7 @@ class listController{
 		}
 		$commentData = $this->comment->select($threadId);
 		$comment = unserialize($commentData['comment']);
-
+		
 		$comment = $this->util->checkCommentLink($comment);
 		$comment = $this->util->checkComment($comment);
 		$flag = 0;
@@ -100,26 +100,24 @@ class listController{
 	 * @return array           表示件数分のコメント
 	 */
 	 public function setDisplayComment($comment,$limit){
-		if($limit == 50){
-			foreach($comment as $key=>$value){
-				$date[$key]= $value['created'];
-			}
-			arsort($date);
-			foreach($date as $key=>$value){
-				$sorted[] = $comment[$key];
-			}
-			$comment = $sorted;
-	 		$result = array_chunk($comment,(int)$limit,TRUE);
-	 		$comment = $result[0];
-		}else if($limit){
-		 	$result = array_chunk($comment,(int)$limit,TRUE);
-	 		$comment = $result[0];
-		}
-
-	 	return $comment;
+		if($limit){
+			if($limit == 50){
+				$comment = $this->util->sortComment($comment,$limit);
+			}else{
+				$result = array_chunk($comment,(int)$limit,TRUE);
+	 			$comment = $result[0];
+	 		}
+	 	}
+		return $comment;
 	 }
+	
+	/**
+	 * ログインエラーページを表示する
+	 */
 	public function error(){
 		$this->view->display('error',array('home'=>Config::$home_url));
 	}
+	
+
 
 }

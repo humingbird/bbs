@@ -51,12 +51,6 @@ require_once(Config::$base_path."/model/comment.php");
 				header("Location:".Config::$home_url.'/?page=thread&db=1');
 				exit;
 			}
-			//登録したthreadIdを取得してくる
-			$threadId = $this->threadInfo->selectThreadId($postData['name']);
-			
-			//commentテーブルにinsert
-			$this->comment->insert($threadId,$postData);
-			
 			//リダイレクト
 			header("Location:".Config::$home_url);
 

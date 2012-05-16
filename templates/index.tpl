@@ -5,7 +5,6 @@
 		<link type="text/css" href="bbs.css" rel="stylesheet">
 	</head>
 	<body onload="displayError()">
-		<div id="error"></div>
 		<h3>掲示板</h3>
 		<!-- スレッド一覧表示 -->
 		<div id="thread_list">
@@ -19,15 +18,20 @@
 		{foreach from=$list key=id item=val}
 			<div id="thread">
 				<h4>No:{$val.id}  <a href="?page=list&id={$val.id}">{$val.title}</a></h4>
+				<div>1 名前:{if $val.email}<a href='mailto:{$val.email}'>{/if}{if $val.name}<span id=name>{$val.name}</span>{else}<span id=name>ななしさん</span>{/if}{if $val.email}</a>{/if}  投稿日時:{$val.created}</div>
+				<div>
+					{$val.description}
+				</div>
+				</br>				
 				<!-- ここから最大三件表示 -->
 				{foreach from=$comment[$val.id] key=k item=c}
-					<div class="comment" id="c_{$k + 1}">
-						<div>{$k +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>ななしさん</span>{/if}{if $c.email}</a>{/if}  投稿日時:{$c.created}</div>
+					<div class="comment" id="c_{$c.id}">
+						<div>{$c.id +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>ななしさん</span>{/if}{if $c.email}</a>{/if}  投稿日時:{$c.created}</div>
 						<div>
 							{$c.description}
 						</div>
 					</div>
-					<hr>
+					</br>
 				{/foreach}
 				<!-- for文ここまで -->
 				<a href="?page=list&id={$val.id}">全て表示する</a>  <a href="?page=list&id={$val.id}&limit=50">最新50件</a>  <a href="?page=list&id={$val.id}&limit=100">1-100</a>
@@ -36,6 +40,7 @@
 			<!-- ここからコメント投稿 -->
 			<div id="form">
 				{if $login && $flag[$k] !=1}
+				<div class="error" id="error_{$val.id}"></div>
 				<form method="POST" action="?regist=1" id = "input_comment">
 					<div id="form_name">名前<input type="text" name="name">email
 					<input type="text" name="email"></div>

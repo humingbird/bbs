@@ -7,38 +7,70 @@ function displayError(){
 			var ele = document.createElement("div");
 			var str = document.createTextNode('コメントを記入してください');
 			ele.appendChild(str);
-
-			document.getElementById('error').appendChild(ele);
+			if(param.id){
+				document.getElementById('error_' + param.id ).appendChild(ele);
+			}else{
+				document.getElementById('error').appendChild(ele);
+			}
+		}else if(param.title == 1){
+			var ele = document.createElement("div");
+			var str = document.createTextNode('タイトルを入力してください');
+			ele.appendChild(str);
+			if(param.id){
+				document.getElementById('error_' + param.id ).appendChild(ele);
+			}else{
+				document.getElementById('error').appendChild(ele);
+			}
 		}else if(param.name == 2){
 			var ele = document.createElement("div");
-			var str = document.createTextNode('名前の文字数制限を越えています');
+			var str = document.createTextNode('名前は30字以内で入力してください');
 			ele.appendChild(str);
 
-			document.getElementById('error').appendChild(ele);
+			if(param.id){
+				document.getElementById('error_' + param.id ).appendChild(ele);
+			}else{
+				document.getElementById('error').appendChild(ele);
+			}
 		}else if(param.email ==2){
 			var ele = document.createElement("div");
-			var str = document.createTextNode('メールアドレスが長すぎます');
+			var str = document.createTextNode('メールアドレスは30字以内で入力してください');
 			ele.appendChild(str);
 
-			document.getElementById('error').appendChild(ele);
+			if(param.id){
+				document.getElementById('error_' + param.id ).appendChild(ele);
+			}else{
+				document.getElementById('error').appendChild(ele);
+			}
 		}else if(param.comment == 2){
 			var ele = document.createElement("div");
-			var str = document.createTextNode('コメントが長すぎます');
+			var str = document.createTextNode('コメントは300字以内で入力してください');
 			ele.appendChild(str);
 
-			document.getElementById('error').appendChild(ele);
+			if(param.id){
+				document.getElementById('error_' + param.id ).appendChild(ele);
+			}else{
+				document.getElementById('error').appendChild(ele);
+			}
 		}else if(param.email == 3){
 			var ele = document.createElement("div");
 			var str = document.createTextNode('メールアドレスが正しくありません');
 			ele.appendChild(str);
 
-			document.getElementById('error').appendChild(ele);
+			if(param.id){
+				document.getElementById('error_' + param.id ).appendChild(ele);
+			}else{
+				document.getElementById('error').appendChild(ele);
+			}
 		}else if(param.db == 1){
 			var ele = document.createElement("div");
 			var str = document.createTextNode('スレッド登録に失敗しました');
 			ele.appendChild(str);
 
-			document.getElementById('error').appendChild(ele);
+			if(param.id){
+				document.getElementById('error_' + param.id ).appendChild(ele);
+			}else{
+				document.getElementById('error').appendChild(ele);
+			}
 		}
 	}
 	

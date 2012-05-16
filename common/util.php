@@ -14,13 +14,12 @@ class Util{
 	 * @return array 			チェックを通ったデータ
 	 */
 	public function checkParams($postData,$page=null){
-			$this->checkUndefined($postData,$page);
-			$this->countWords($postData,$page);
-			$this->checkEmail($postData['email'],$page);
-			
 			foreach($postData as $key=>$value){
 				$postData[$key] = htmlspecialchars($value);
 			}
+			$this->checkUndefined($postData,$page);
+			$this->countWords($postData,$page);
+			$this->checkEmail($postData['email'],$page,$postData['threadId']);
 			return $postData;
 		}
 	
@@ -48,12 +47,12 @@ class Util{
 			}
 			$error = rtrim($error,'&');
 			
-			if($page != 'list'){
+			if($page && $page != 'list'){
 				$param = '?page='.$page.'&'.$error;
 			}else if($page === 'list'){
-				$param = '?page='.$page.'&id='.$postData['threadId'].'&'.$error;
+				$param = '?page='.$page.'&id='.$postData['threadId'].'&'.$error.'#error_'.$postData['threadId'];
 			}else{
-				$param = '?'.$error;
+				$param = '?'.$error.'&id='.$postData['threadId'].'#error_'.$postData['threadId'];
 			}
 			header("Location:".Config::$home_url.$param);
 			exit;
@@ -94,10 +93,12 @@ class Util{
 			}
 			$error = rtrim($error,'&');
 			
-			if($page){
+			if($page && $page != 'list'){
 				$param = '?page='.$page.'&'.$error;
+			}else if($page === 'list'){
+				$param = '?page='.$page.'&id='.$postData['threadId'].'&'.$error.'#error_'.$postData['threadId'];
 			}else{
-				$param = '?'.$error;
+				$param = '?'.$error.'&id='.$postData['threadId'].'#error_'.$postData['threadId'];
 			}
 			header("Location:".Config::$home_url.$param);
 			exit;
@@ -107,9 +108,11 @@ class Util{
 	/**
 	 * メールアドレスかどうか（簡易的に）チェックする
 	 *
-	 * @params string $email  postされたメールアドレス
+	 * @params string $email     postされたメールアドレス
+	 * @params string $page      遷移するページ名
+	 * @params string $threadId  スレッドid
 	 */
-	public function checkEmail($email,$page){
+	public function checkEmail($email,$page,$threadId){
 		$check = false;
 		
 		if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $email) && $email) {
@@ -123,10 +126,12 @@ class Util{
 			}
 			$error = rtrim($error,'&');
 			
-			if($page){
+			if($page && $page != 'list'){
 				$param = '?page='.$page.'&'.$error;
+			}else if($page === 'list'){
+				$param = '?page='.$page.'&id='.$threadId.'&'.$error.'#error_'.$threadId;
 			}else{
-				$param = '?'.$error;
+				$param = '?'.$error.'&id='.$threadId.'#error_'.$threadId;
 			}
 			header("Location:".Config::$home_url.$param);
 			exit;
@@ -161,6 +166,29 @@ class Util{
 			$comment[$key]['description'] = preg_replace('/\\n/','</br>',$value['description']);
 		}
 		return $comment;
+	}
+	
+	/**
+	 * コメントを表示用にソートする
+	 * @params array  $comment  コメントデータ
+	 * @params string $limit    表示件数（指定がない場合は10件）
+	 * @return array            表示件数分のコメント
+	 */
+	public function sortComment($comment,$limit =10){
+		foreach($comment as $key=>$value){
+			$date[$key]= $value['created'];
+		}
+		//投稿時刻でソートする
+		arsort($date);
+		//指定件数分で区切る
+		$sorted = array_chunk($date,(int)$limit,TRUE);
+		//もっかいソートする
+		asort($sorted[0]);
+		
+		foreach($sorted[0] as $key=>$value){
+			$result[] = $comment[$key];
+		}
+		return $result;
 	}
 	
 }

@@ -28,10 +28,10 @@ class threadInfo{
 	 */
 	public function insert($postData){
 		$params = array(':title'=>$postData['title'],':name'=>$postData['name'],
-			':email'=>$postData['email']);
+			':email'=>$postData['email'],':description'=>$postData['comment']);
 		
-		$sql = 'insert into `thread_info`(`title`,`name`,`email`,`created`,`updated`)
-			values(:title,:name,:email,NOW(),NOW())';
+		$sql = 'insert into `thread_info`(`title`,`name`,`email`,`description`,`created`,`updated`)
+			values(:title,:name,:email,:description,NOW(),NOW())';
 			
 		$state = $this->pdoExecute($sql,$params);
 
@@ -102,7 +102,7 @@ class threadInfo{
 	 * @return array   スレッド情報
 	 */
 	public function selectForId($id){
-		//if(!$row = $this->memcache->get(self::THREAD.$id)){
+		if(!$row = $this->memcache->get(self::THREAD.$id)){
 			$params = array(':id'=>$id);
 			$sql = 'select * from thread_info where id=:id';
 		
@@ -114,8 +114,8 @@ class threadInfo{
     			$stmt->execute($params);
 			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		
-			//$this->memcache->set(self::THREAD.$id,$row);
-		//}
+			$this->memcache->set(self::THREAD.$id,$row);
+		}
 		return $row;
 	}
 	

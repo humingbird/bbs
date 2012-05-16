@@ -5,9 +5,9 @@
 		<link src="bbs.css" rel="stylesheet" type="text/stylesheet">
 	</head>
 	<body onload="displayError()" style="background-color:lightgray;">
-		<div id="error"></div>
 		<h3>新規スレッド作成</h3>
 		<h5>必要事項を記入して、作成ボタンを押してください</h5>
+		<div class="error" id="error"></div>
 		<form method="POST" action="?page=thread&regist=1">
 			<div>タイトル</br>
 				<input type="text" name="title"></div>

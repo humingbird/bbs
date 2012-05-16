@@ -26,15 +26,17 @@ class comment{
 
 		if($pastData){
 			$comment = unserialize($pastData['comment']);
+			$key = count($comment)+1;
 			if(count($comment) == Config::MAXCOUNT){
 				echo '書き込み件数が1000を越えたので書き込みできません';
 				header('Location:'.Config::$home_url.'?thread_max=1');
 				exit;
 			}
+		}else{
+			$key=1;
 		}
-		
 		//名前.email.コメント.投稿時刻をひとつの配列にしてシリアライズ
-		$comment[]=array('name'=>$postData['name'],'email'=>$postData['email'],
+		$comment[]=array('id'=>$key,'name'=>$postData['name'],'email'=>$postData['email'],
 				'description'=>$postData['comment'],'created'=>date('Y-m-d H:i:s')
 			);
 		$data = serialize($comment);

@@ -72,8 +72,18 @@ class indexController{
 		}
 		foreach($commentList as $key=>$value){
 			$flag[$key] = 0;
-			if(count($value)>=3){
-				$arr =  array_chunk($value,3,TRUE);
+			if(count($value) > Config::MAXCOUNT){
+				$flag[$key] = 1;
+			}
+			$value = $this->util->sortComment($value,10);
+			
+			//コメントの内容チェック（urlリンク）
+			$value = $this->util->checkCommentLink($value);
+			$value = $this->util->checkComment($value);
+			$commentList[$key] = $value;
+
+			/*if(count($value)>=10){
+				$arr =  array_chunk($value,10,TRUE);
 				
 				//コメントの内容チェック（urlリンク）
 				$arr[0] = $this->util->checkCommentLink($arr[0]);
@@ -82,7 +92,8 @@ class indexController{
 				if(count($value) > Config::MAXCOUNT){
 					$flag[$key] = 1;
 				}
-			}
+				
+			}*/
 		}
 		//スレッド一覧用
 		$titleList = $this->threadInfo->selectThreadList(10);
