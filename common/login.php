@@ -41,4 +41,14 @@ class fbLogin {
 		}
 	}
 
+	/**
+	 * fbのidからユーザ情報を引っ張ってくる
+	 *
+	 * @return array?       ユーザのデータ
+	 */
+	public function getUserInfo(){
+		$me = $this->fb->api('/me');
+		return $me;
+	}
+
 }

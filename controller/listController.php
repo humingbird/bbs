@@ -48,11 +48,14 @@ class listController{
 			$login = $this->fb->checkLogin();
 			if(!$login){
 				$url = $this->fb->getLoginUrl();
+				$profile='';
 			}else{
 				$url='';
+				$profile = $this->fb->getUserInfo();
 			}
 		}else{
 			$login =1;
+			$profile='';
 		}
 		//threadIdをもとにthread_infoとcommentテーブルの情報を取得する
 		$threadId = $_GET['id'];
@@ -73,7 +76,7 @@ class listController{
 		//表示件数を制限する（nullの場合は何もしないで返す）
 		$comment = $this->setDisplayComment($comment,$limit);
 
-		$this->view->display('list',array('info'=>$info,'comment'=>$comment,'login'=>$login,'login_url'=>$url,'flag'=>$flag));
+		$this->view->display('list',array('info'=>$info,'comment'=>$comment,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'profile'=>$profile));
 	}
 
 	/**

@@ -1,0 +1,39 @@
+body{
+	background-color:gray;
+	font-size:20px;
+	line-height:1.5em;
+	text-align:center;
+}
+td, th, p, h1, h2, h3, h4, h5, h6, label { word-break: break-all; word-wrap: break-word; }
+
+#thread_list{
+	width:100%;
+	background-color:lightgray;
+}
+
+#thread{
+	width:100%;
+	background-color:lightgray;
+}
+
+.title{
+	width:100%;
+
+}
+#form_name{
+	width:500px;
+	height:30px;
+}
+
+#form_email{
+	width:500px;
+	height:30px;
+}
+textarea{
+	width:400px;
+	height:100px;
+}
+
+.error{
+	color:red;
+}

@@ -52,14 +52,16 @@ class indexController{
 		//ログインしているかどうか
 		if(!Config::$debug){
 			$login = $this->fb->checkLogin();
-
 			if(!$login){
 				$url = $this->fb->getLoginUrl();
+				$profile='';
 			}else{
 				$url='';
+				$profile = $this->fb->getUserInfo();
 			}
 		}else{
 			$login = 1; //ローカル上では常にログイン状態にする
+			$profile='';
 		}
 
 		$list = $this->threadInfo->selectThreadList();
@@ -98,7 +100,7 @@ class indexController{
 		//スレッド一覧用
 		$titleList = $this->threadInfo->selectThreadList(10);
 
-		$this->view->display('index',array('list'=>$list,'comment'=>$commentList,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'title'=>$titleList));
+		$this->view->display('index',array('list'=>$list,'comment'=>$commentList,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'title'=>$titleList,'profile'=>$profile));
 	}
 
 	/**

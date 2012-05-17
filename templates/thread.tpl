@@ -1,8 +1,14 @@
 <html>
 	<head>
 		<title>新規スレッド作成</title>
+		<meta name="viewport" content="width=640,user-scalable=yes" />
 		<script type="text/javascript" src = "bbs.js"></script>
-		<link src="bbs.css" rel="stylesheet" type="text/stylesheet">
+		<!-- スマートフォンとPCで読み込むCSSファイルを変える -->
+		<style type="text/css">
+			@import url("bbs.css") screen and (min-width:960px);
+			@import url("bbs_sp.css") screen and (min-width:480px) and (max-width:768px);
+		</style>
+		<script type="text/javascript" src = "bbs.js"></script>
 	</head>
 	<body onload="displayError()" style="background-color:lightgray;">
 		<h3>新規スレッド作成</h3>

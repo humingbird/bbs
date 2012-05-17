@@ -1,13 +1,17 @@
 <html>
 	<head>
 		<title>掲示板:{$info.title}</title>
+		<meta name="viewport" content="width=640">
 		<script type="text/javascript" src = "bbs.js"></script>
-		<link type="text/css" href="bbs.css" rel="stylesheet">
+		<style type="text/css">
+			@import url("bbs.css") screen and (min-width:960px);
+			@import url("bbs_sp.css") screen and (min-width:480px) and (max-width:768px);
+		</style>
 	</head>
 	<body onload="displayError()">
 		<div id="thread">
-			<h4>No:{$info.id}    <span id=title>{$info.title}</span></h4>
-			<div>1 名前:{if $info.email}<a href="mailto:{$info.email}">{/if}{if $info.name}<span id=name>{$info.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $info.email}</a>{/if}  投稿日時：{$info.created}</div>
+			<div class="title"><h4>No:{$info.id}    <span id=title>{$info.title}</span></h4></div>
+			<div id="thread_info">1 名前:{if $info.email}<a href="mailto:{$info.email}">{/if}{if $info.name}<span id=name>{$info.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $info.email}</a>{/if}  投稿日時：{$info.created}</div>
 				<div>{$info.description}</div>
 		
 			</br>
@@ -25,8 +29,8 @@
 			{if $flag !=1}
 				<div class="error"id='error_{$info.id}'></div>
 				<form method="POST" action="?page=list&regist=1">
-					<div>名前<input type="text" name="name">email
-					<input type="text" name="email"></div>
+					<div id="form_name">名前<input type="text" name="name"{if $profile.name}value="{$profile.name}"{/if}></div>
+					<div id="form_email">email<input type="text" name="email"></div>
 					<div>コメント</br>
 						<textarea name="comment" cols=40 rows=4 wrap="hard"></textarea>
 					</div>
