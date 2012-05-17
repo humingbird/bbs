@@ -23,7 +23,7 @@ function displayError(){
 			}
 		}else if(param.name == 2){
 			var ele = document.createElement("div");
-			var str = document.createTextNode('名前は30字以内で入力してください');
+			var str = document.createTextNode('名前は25字以内で入力してください');
 			ele.appendChild(str);
 
 			if(param.id){
@@ -33,7 +33,7 @@ function displayError(){
 			}
 		}else if(param.email ==2){
 			var ele = document.createElement("div");
-			var str = document.createTextNode('メールアドレスは30字以内で入力してください');
+			var str = document.createTextNode('メールアドレスは25字以内で入力してください');
 			ele.appendChild(str);
 
 			if(param.id){

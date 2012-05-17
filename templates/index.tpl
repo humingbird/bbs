@@ -18,15 +18,15 @@
 		{foreach from=$list key=id item=val}
 			<div id="thread">
 				<h4>No:{$val.id}  <a href="?page=list&id={$val.id}">{$val.title}</a></h4>
-				<div>1 名前:{if $val.email}<a href='mailto:{$val.email}'>{/if}{if $val.name}<span id=name>{$val.name}</span>{else}<span id=name>ななしさん</span>{/if}{if $val.email}</a>{/if}  投稿日時:{$val.created}</div>
+				<div>1 名前:{if $val.email}<a href='mailto:{$val.email}'>{/if}{if $val.name}<span id=name>{$val.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $val.email}</a>{/if}  投稿日時:{$val.created}</div>
 				<div>
 					{$val.description}
 				</div>
 				</br>				
-				<!-- ここから最大三件表示 -->
+				<!-- ここから最大10件表示 -->
 				{foreach from=$comment[$val.id] key=k item=c}
 					<div class="comment" id="c_{$c.id}">
-						<div>{$c.id +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>ななしさん</span>{/if}{if $c.email}</a>{/if}  投稿日時:{$c.created}</div>
+						<div>{$c.id +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $c.email}</a>{/if}  投稿日時:{$c.created}</div>
 						<div>
 							{$c.description}
 						</div>
@@ -34,12 +34,12 @@
 					</br>
 				{/foreach}
 				<!-- for文ここまで -->
-				<a href="?page=list&id={$val.id}">全て表示する</a>  <a href="?page=list&id={$val.id}&limit=50">最新50件</a>  <a href="?page=list&id={$val.id}&limit=100">1-100</a>
-				  <a href="#">板のトップ</a>  <a href="">リロード</a>
+				<div id="list_nav"><a href="?page=list&id={$val.id}">全て表示する</a>  <a href="?page=list&id={$val.id}&limit=50">最新50件</a>  <a href="?page=list&id={$val.id}&limit=100">1-100</a>
+				  <a href="#">板のトップ</a>  <a href="">リロード</a></div>
 			</div>
 			<!-- ここからコメント投稿 -->
 			<div id="form">
-				{if $login && $flag[$k] !=1}
+				{if $flag[$k] !=1}
 				<div class="error" id="error_{$val.id}"></div>
 				<form method="POST" action="?regist=1" id = "input_comment">
 					<div id="form_name">名前<input type="text" name="name">email
@@ -50,9 +50,6 @@
 					<div><input type="submit" value="投稿"></div>
 					<input type="hidden" name="threadId" value="{$val.id}">
 				</form>
-				{else if !$login}
-					コメントを書き込むにはログインが必要です</br>
-					<a href="{$login_url}">facebookログイン</a>
 				{else}
 					このスレッドの書き込みは1000件を越えたので書き込みできません。
 				{/if}

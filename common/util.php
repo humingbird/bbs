@@ -74,11 +74,11 @@ class Util{
 				$errorComment['title']=2;
 			}
 		}
-		if(mb_strlen($postData['name'])>30){
+		if(mb_strlen($postData['name'])>25){
 			$check = true;
 			$errorComment['name']=2;
 		}
-		if(mb_strlen($postData['email'])>30){
+		if(mb_strlen($postData['email'])>25){
 			$check = true;
 			$errorComment['email']=2;
 		}
