@@ -9,7 +9,7 @@ class comment{
 
 	//コンストラクタ
 	public function __construct(){
-		*$cache = new cache;
+		$cache = new cache;
 		$this->memcache = $cache->connect();
 	}
 	
