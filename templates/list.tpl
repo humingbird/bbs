@@ -11,17 +11,21 @@
 	<body onload="displayError()">
 		<div id="thread">
 			<div class="title"><h4>No:{$info.id}    <span id=title>{$info.title}</span></h4></div>
-			<div id="thread_info">1 名前:{if $info.email}<a href="mailto:{$info.email}">{/if}{if $info.name}<span id=name>{$info.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $info.email}</a>{/if}  投稿日時：{$info.created}</div>
+			<div id="thread_info">1 名前:{if $info.email}<a href="mailto:{$info.email}">{/if}{if $info.name}<span id=name>{$info.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $info.email}</a>{/if}
+			{if $info.fb_url}<a href="{$info.fb_url}">facebook</a>{/if}  投稿日時：{$info.created}</div>
 				<div>{$info.description}</div>
 		
 			</br>
+			{if $comment}
 			{foreach from=$comment key=k item=v}
 				<div class="comment">
-					<div>{$k + 2} 名前:{if $v.email}<a href="mailto:{$v.email}">{/if}{if $v.name}<span id=name>{$v.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $v.email}</a>{/if}  投稿日時：{$v.created}</div>
+					<div>{$k + 2} 名前:{if $v.email}<a href="mailto:{$v.email}">{/if}{if $v.name}<span id=name>{$v.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $v.email}</a>{/if} 
+						{if $v.fb_url}<a href="{$v.fb_url}">facebook</a>{/if}   投稿日時：{$v.created}</div>
 					<div>{$v.description}</div>
 				</div>
 				</br>
 			{/foreach}
+			{/if}
 		</div>
 		<!-- ここからコメント投稿 -->
 		</br>
@@ -36,6 +40,7 @@
 					</div>
 					<div><input type="submit" value="投稿"></div>
 					<input type="hidden" name="threadId" value="{$info.id}">
+					{if $profile.link}<input type="hidden" name="fb_url" value="{$profile.link}">{/if}
 				</form>
 			{else}
 					このスレッドの書き込みは1000件を越えたので書き込みできません。

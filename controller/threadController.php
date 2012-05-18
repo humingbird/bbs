@@ -3,6 +3,9 @@ require_once(Config::$base_path."/common/view.php");
 require_once(Config::$base_path."/common/util.php");
 require_once(Config::$base_path."/model/threadInfo.php");
 require_once(Config::$base_path."/model/comment.php");
+if(!Config::$debug){
+	require_once(Config::$base_path.'/common/login.php');
+}
 
 /**
  * 新規スレッド作成
@@ -12,11 +15,21 @@ require_once(Config::$base_path."/model/comment.php");
 		private $threadInfo;
 		private $comment;
 		private $util;
+		private $fb;
 		
 		//コンストラクタ
 		function __construct(){
+			if(!Config::$debug){
+				$this->fb = new fbLogin;
+			}
 			$this->view = new View;
 			$this->util = new Util;
+			
+			$error = $_GET['error_reason'];
+			if($error){
+				$this->error();
+				exit;
+			}
 			//modelクラスの呼び出し
 			$this->threadInfo= new threadInfo;
 			$this->comment = new comment;
@@ -30,7 +43,21 @@ require_once(Config::$base_path."/model/comment.php");
 		}
 		
 		function exec(){
-			$this->view->display('thread',array('home'=>Config::$home_url));
+			//ログインしてるかどうか
+			if(!Config::$debug){
+				$login = $this->fb->checkLogin();
+				if(!$login){
+					$url = $this->fb->getLoginUrl();
+					$profile ='';
+				}else{
+					$url='';
+					$profile = $this->fb->getUserInfo();
+				}
+			}else{
+				$login = 1; //ローカル上では常にログイン設定
+				$profile = '';
+			}	
+			$this->view->display('thread',array('home'=>Config::$home_url,'login'=>$login,'fb_url'=>$url,'profile'=>$profile));
 		}
 		/**
 		 * 処理の実行

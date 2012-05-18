@@ -63,14 +63,22 @@ class indexController{
 			$login = 1; //ローカル上では常にログイン状態にする
 			$profile='';
 		}
+		
+		//UAの取得
+		$ua = $_SERVER['HTTP_USER_AGENT'];
+		//PC/Android/iPhoneかが分かるように文字列を切り取る
+		//その要素をassign
 
+		//スレッド情報の取得
 		$list = $this->threadInfo->selectThreadList();
+		//スレッドごとのコメント情報の取得
 		foreach($list as $key=>$value){
 			$comment[] = $this->comment->select((int)$value['id']);
 		}
-		
 		foreach($comment as $key=>$value){
-			$commentList[$value['thread_id']] = unserialize($value['comment']);
+			if($value['comment'] !=''){
+				$commentList[$value['thread_id']] = unserialize($value['comment']);
+			}
 		}
 		foreach($commentList as $key=>$value){
 			$flag[$key] = 0;
@@ -83,22 +91,15 @@ class indexController{
 			$value = $this->util->checkCommentLink($value);
 			$value = $this->util->checkComment($value);
 			$commentList[$key] = $value;
-
-			/*if(count($value)>=10){
-				$arr =  array_chunk($value,10,TRUE);
-				
-				//コメントの内容チェック（urlリンク）
-				$arr[0] = $this->util->checkCommentLink($arr[0]);
-				$arr[0] = $this->util->checkComment($arr[0]);
-				$commentList[$key] = $arr[0];
-				if(count($value) > Config::MAXCOUNT){
-					$flag[$key] = 1;
-				}
-				
-			}*/
 		}
 		//スレッド一覧用
-		$titleList = $this->threadInfo->selectThreadList(10);
+/*		$threadId = $this->comment->getThreadListByUpdate();
+		if($threadId){
+			foreach($threadId as $value){
+				$titleList[] = $this->threadInfo->selectForId((int)$value['thread_id']);
+			}
+		}*/
+		$titleList = $this->threadInfo->selectTitleList();
 
 		$this->view->display('index',array('list'=>$list,'comment'=>$commentList,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'title'=>$titleList,'profile'=>$profile));
 	}
@@ -109,11 +110,13 @@ class indexController{
 	public function regist(){
 		//postされた要素を取得
 		$postData = $_POST;
-		
+
 		//バリデーション処理
 			$postData = $this->util->checkParams($postData);
 		//update
 			$this->comment->insert($postData['threadId'],$postData);
+		//スレッドの更新時刻もupdate
+			$this->threadInfo->updateTime((int)$postData['threadId']);
 		
 		//topページにリダイレクト
 			header("Location:".Config::$home_url);

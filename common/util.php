@@ -14,6 +14,10 @@ class Util{
 	 * @return array 			チェックを通ったデータ
 	 */
 	public function checkParams($postData,$page=null){
+			//名前だけはバリデーション処理後に最大文字数で切り取る
+			if(mb_strlen($postData['name'])>20){
+				$postData['name'] = mb_substr ($postData['name'],0,20);
+			}
 			foreach($postData as $key=>$value){
 				$postData[$key] = htmlspecialchars($value);
 			}
@@ -74,10 +78,10 @@ class Util{
 				$errorComment['title']=2;
 			}
 		}
-		if(mb_strlen($postData['name'])>25){
+		/*if(mb_strlen($postData['name'])>25){
 			$check = true;
 			$errorComment['name']=2;
-		}
+		}*/
 		if(mb_strlen($postData['email'])>25){
 			$check = true;
 			$errorComment['email']=2;

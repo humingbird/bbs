@@ -67,11 +67,13 @@ class listController{
 		$commentData = $this->comment->select($threadId);
 		$comment = unserialize($commentData['comment']);
 		
-		$comment = $this->util->checkCommentLink($comment);
-		$comment = $this->util->checkComment($comment);
-		$flag = 0;
-		if(count($comment)>Config::MAXCOUNT){
-			$flag = 1;
+		if($comment){
+			$comment = $this->util->checkCommentLink($comment);
+			$comment = $this->util->checkComment($comment);
+			$flag = 0;
+			if(count($comment)>Config::MAXCOUNT){
+				$flag = 1;
+			}
 		}
 		//表示件数を制限する（nullの場合は何もしないで返す）
 		$comment = $this->setDisplayComment($comment,$limit);

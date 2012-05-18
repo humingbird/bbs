@@ -1,14 +1,8 @@
 <html>
 	<head>
 		<title>新規スレッド作成</title>
-		<meta name="viewport" content="width=640,user-scalable=yes" />
 		<script type="text/javascript" src = "bbs.js"></script>
-		<!-- スマートフォンとPCで読み込むCSSファイルを変える -->
-		<style type="text/css">
-			@import url("bbs.css") screen and (min-width:960px);
-			@import url("bbs_sp.css") screen and (min-width:480px) and (max-width:768px);
-		</style>
-		<script type="text/javascript" src = "bbs.js"></script>
+		<link src="bbs.css" rel="stylesheet" type="text/stylesheet">
 	</head>
 	<body onload="displayError()" style="background-color:lightgray;">
 		<h3>新規スレッド作成</h3>
@@ -19,7 +13,7 @@
 				<input type="text" name="title"></div>
 			</div>
 			<div>名前</br>
-				<input type="text" name="name"></div>
+				<input type="text" name="name" {if $profile.id}value="{$profile.id}"{/if}></div>
 			</div>
 			<div>email</br>
 				<input type="text" name="email">
@@ -27,9 +21,10 @@
 			<div>コメント</br>
 				<textarea name="comment" cols=40 rows=4 wrap="hard"></textarea>
 			</div>
+			{if $profile.link}<input type="hidden" name="fb_url" value="{$profile.link}">{/if}
 			<div><input type="submit" value="作成"></div>
 		</form>
-
+		<div id="fb_login">{if !$login}<a href="{$fb_url}">fbログイン</a>{/if}
 		<a href="{$home}">topに戻る</a>
 	</body>
 </html>

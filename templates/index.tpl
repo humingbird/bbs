@@ -14,7 +14,7 @@
 		<h3>掲示板</h3>
 		<!-- スレッド一覧表示 -->
 		<div id="thread_list">
-			スレッド一覧(最新10件表示）</br>
+			スレッド一覧</br>
 			{foreach from=$title key=id item=val}
 				<a href="?page=list&id={$val.id}">{$val.title}</a>    
 			{/foreach}
@@ -24,7 +24,8 @@
 		{foreach from=$list key=id item=val}
 			<div id="thread">
 				<div class="title"><h4>No:{$val.id}  <a href="?page=list&id={$val.id}">{$val.title}</a></h4></div>
-				<div>1 名前:{if $val.email}<a href='mailto:{$val.email}'>{/if}{if $val.name}<span id=name>{$val.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $val.email}</a>{/if}  投稿日時:{$val.created}</div>
+				<div>1 名前:{if $val.email}<a href='mailto:{$val.email}'>{/if}{if $val.name}<span id=name>{$val.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $val.email}</a>{/if}
+					{if $val.fb_url}<a href="{$val.fb_url}">facebook</a>{/if}   投稿日時:{$val.created}</div>
 				<div>
 					{$val.description}
 				</div>
@@ -32,7 +33,8 @@
 				<!-- ここから最大10件表示 -->
 				{foreach from=$comment[$val.id] key=k item=c}
 					<div class="comment" id="c_{$c.id}">
-						<div>{$c.id +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $c.email}</a>{/if}  投稿日時:{$c.created}</div>
+						<div>{$c.id +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $c.email}</a>{/if}  
+							{if $c.fb_url}<a href="{$c.fb_url}">facebook</a>{/if}投稿日時:{$c.created}</div>
 						<div>
 							{$c.description}
 						</div>
@@ -48,15 +50,16 @@
 				{if $flag[$k] !=1}
 				<div class="error" id="error_{$val.id}"></div>
 				<form method="POST" action="?regist=1" id = "input_comment">
-					<div id="form_name">名前<input type="text" name="name" {if $profile.name}value="{$profile.name}"{/if} ></div>
+					<div id="form_name">名前<input type="text" name="name" {if $profile.id}value="{$profile.id}"{/if} ></div>
 					<div id="form_email">email<input type="email" name="email"></div>
 					<div>コメント</br>
 						<textarea name="comment" cols=40 rows=4></textarea>
 					</div>
 					<div><input type="submit" value="投稿"></div>
 					<input type="hidden" name="threadId" value="{$val.id}">
+					{if $profile.link}<input type="hidden" name="fb_url" value="{$profile.link}">{/if}
 				</form>
-				<div id="fb_login"><a href="{$login_url}">fbログイン</a></div>
+				<div id="fb_login">{if !$login}<a href="{$login_url}">fbログイン</a>{/if}</div>
 				{else}
 					このスレッドの書き込みは1000件を越えたので書き込みできません。
 				{/if}
