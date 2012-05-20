@@ -73,9 +73,7 @@ class threadInfo{
 	 * @return array         スレッド情報
 	 */
 	public function selectThreadList($limit = 10){
-		
 		//memcacheにデータが無いか探しに行く
-		
 		if(!$row = $this->memcache->get(self::NEW_THREAD)){
 			$sql = sprintf('select * from thread_info order by id desc limit %d',$limit);	
 			
@@ -155,6 +153,28 @@ class threadInfo{
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			$this->memcache->set(self::TITLE_LIST,$rows);
 		}
+		return $rows;
+	}
+	
+	/**
+	 * 指定数*10件目までのスレッド一覧を１０件取得する
+	 *
+	 * @params int $next  指定数
+	 * @return array スレッド一覧
+	 */
+	public function selectNextList($next){
+		$start = 10*$next-10;
+		$end = 10*$next;
+		$sql = sprintf('select * from `thread_info` order by `created` desc limit %d,%d',$start,$end);
+		
+		//DBの接続
+		$db = new DbConnection;
+		$conn = $db->connect();
+
+		$stmt = $conn->prepare($sql);
+    	$stmt->execute();
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		
 		return $rows;
 	}
 	

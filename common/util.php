@@ -195,5 +195,23 @@ class Util{
 		return $result;
 	}
 	
+	/**
+	 * UAから端末の種類を判別する
+	 *
+	 * @params string  $ua 端末情報
+	 * @return string     端末ごとの名称（PC:pc,iPhone:iphone,Android:android)
+	 */
+	public function setDeviceType($ua){
+		if(preg_match('/.*iPhone.*/',$ua) !=0){
+			$deviceType = 'iphone';
+		}else if(preg_match('/.*Android.*/',$ua) !=0){
+			$deviceType = 'android';
+		}else{
+			$deviceType = 'pc';
+		}
+		
+		return $deviceType;
+	}
+	
 }
  

@@ -66,10 +66,10 @@ class indexController{
 		
 		//UAの取得
 		$ua = $_SERVER['HTTP_USER_AGENT'];
-		//PC/Android/iPhoneかが分かるように文字列を切り取る
-		//その要素をassign
-
-		//スレッド情報の取得
+		//PC/Android/iPhoneかが分かるように正規表現分岐とか作る
+		$deviceType = $this->util->setDeviceType($ua);
+		
+		//スレッド情報の取得(PCは最新10件,spは５件ずつ表示（CSS側で表示制御）
 		$list = $this->threadInfo->selectThreadList();
 		//スレッドごとのコメント情報の取得
 		foreach($list as $key=>$value){
@@ -93,15 +93,10 @@ class indexController{
 			$commentList[$key] = $value;
 		}
 		//スレッド一覧用
-/*		$threadId = $this->comment->getThreadListByUpdate();
-		if($threadId){
-			foreach($threadId as $value){
-				$titleList[] = $this->threadInfo->selectForId((int)$value['thread_id']);
-			}
-		}*/
 		$titleList = $this->threadInfo->selectTitleList();
-
-		$this->view->display('index',array('list'=>$list,'comment'=>$commentList,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'title'=>$titleList,'profile'=>$profile));
+		
+		$this->view->display('index',array('list'=>$list,'comment'=>$commentList,'login'=>$login,
+			'login_url'=>$url,'flag'=>$flag,'title'=>$titleList,'profile'=>$profile,'device'=>$deviceType));
 	}
 
 	/**
