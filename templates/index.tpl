@@ -61,8 +61,7 @@
 						 			$("#comment_" + num).append('<div>' + data[i].responce[n].description + '</div></br>');
 						 		}
 						 	}
-						 	$("#thread_" + num).append('<div id="list_nav"><a href="?page=list&id=' + data[i].id + '">全て表示する</a>  <a href="?page=list&id=' + data[i].id + '&limit=50">最新50件</a>  <a href="?page=list&id=' + data[i].id + '&limit=100">1-100</a>  <a href="#">板のトップ</a>  <a href="">リロード</a></div>');
-						 	$("#thread_" + num).after('<div class="form" id="form_' + num + '">');
+						 	$("#thread_" + num).append('<div class="form" id="form_' + num + '">');
 						 	//１０００件投稿フラグと,fbログイン状態を取得する何かを作る
 						 	//$("#form_" + num).append('<div class="error" id="error_' + data[i].id + '"></div>');
 						 	if(data[i].flag != 1){
@@ -83,6 +82,7 @@
 							if(!login.login){
 								$("#form_" + num).after('<div id="fb_login"><a href="' + login.url + '">fbログイン</a></div>');
 							}
+							$("#thread_" + num).append('<div id="list_nav"><a href="?page=list&id=' + data[i].id + '">全て表示する</a>  <a href="?page=list&id=' + data[i].id + '&limit=50">最新50件</a>  <a href="?page=list&id=' + data[i].id + '&limit=100">1-100</a>  <a href="#">板のトップ</a>  <a href="">リロード</a></div>');
 						 	num = num + 1;
 						 }
 						});
@@ -92,6 +92,7 @@
 		</script>
 	</head>
 	<body onload="displayError()">
+	<div id="main">
 		<h3>掲示板</h3>
 		<!-- スレッド一覧表示 -->
 		<div id="thread_list">
@@ -100,6 +101,7 @@
 				<a href="?page=list&id={$val.id}">{$val.title}</a>    
 			{/foreach}
 		</div>
+		</br>
 		<!-- スレッド一覧表示ここまで -->
 		<!-- インデックス表示 -->
 		{foreach from=$list key=id item=val}
@@ -123,34 +125,44 @@
 					</br>
 				{/foreach}
 				<!-- for文ここまで -->
+				  </br>
+				<!-- ここからコメント投稿 -->
+				<div class="form" id="form_{$id}">
+					{if $flag[$k] !=1}
+					<div class="error" id="error_{$val.id}"></div>
+					<form method="POST" action="?regist=1" id = "input_comment">
+						<div id="form_name">名前<input type="text" name="name" {if $profile.id}value="{$profile.id}"{/if} ></div>
+						<div id="form_email">email<input type="email" name="email"></div>
+						</br>
+							<div id="text_area">{if $device !='android'}コメント</br>{/if}
+								<textarea name="comment" cols=40 rows=4></textarea>
+							</div>
+						<div><input type="submit" value="投稿"></div>
+						<input type="hidden" name="threadId" value="{$val.id}">
+						{if $profile.link}<input type="hidden" name="fb_url" value="{$profile.link}">{/if}
+					</form>
+					<div id="fb_login">{if !$login}<a href="{$login_url}">fbログイン</a>{/if}</div>
+					{else}
+						このスレッドの書き込みは1000件を越えたので書き込みできません。
+					{/if}
+				</div>
 				<div id="list_nav"><a href="?page=list&id={$val.id}">全て表示する</a>  <a href="?page=list&id={$val.id}&limit=50">最新50件</a>  <a href="?page=list&id={$val.id}&limit=100">1-100</a>
-				  <a href="#">板のトップ</a>  <a href="">リロード</a></div>
-			</div>
-			<!-- ここからコメント投稿 -->
-			<div class="form" id="form_{$id}">
-				{if $flag[$k] !=1}
-				<div class="error" id="error_{$val.id}"></div>
-				<form method="POST" action="?regist=1" id = "input_comment">
-					<div id="form_name">名前<input type="text" name="name" {if $profile.id}value="{$profile.id}"{/if} ></div>
-					<div id="form_email">email<input type="email" name="email"></div>
-					<div>コメント</br>
-						<textarea name="comment" cols=40 rows=4></textarea>
-					</div>
-					<div><input type="submit" value="投稿"></div>
-					<input type="hidden" name="threadId" value="{$val.id}">
-					{if $profile.link}<input type="hidden" name="fb_url" value="{$profile.link}">{/if}
-				</form>
-				<div id="fb_login">{if !$login}<a href="{$login_url}">fbログイン</a>{/if}</div>
-				{else}
-					このスレッドの書き込みは1000件を越えたので書き込みできません。
+				  {if $device != 'pc'}</br>{/if}<a href="#">板のトップ</a>  <a href="">リロード</a></div>
+				  </br>
+				{if $device  == 'android'}
+					</br>
+					</br>
 				{/if}
 			</div>
+			</br>
 			<!-- ここまでコメント投稿 -->
 		{/foreach}
 		<!-- インデックス表示ここまで -->
-		<div id="sp_link" style="border:solid;height:200px;">もっと見る</a></div>
+		</br>
+		<div id="sp_link" height="50%">もっと見る</a></div>
 		<!-- スレッド作成遷移 -->
 		<div id="footer"><a href="?page=thread">新規スレッド作成</a></div>
 		<!-- スレッド作成遷移ここまで -->
+	</div>
 	</body>
 </html>

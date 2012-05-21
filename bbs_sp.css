@@ -1,20 +1,27 @@
 body{
 	width:100%;
-	background-color:gray;
-	font-size:20px;
+	background-image:url('./img/ba.gif');
+	font-size:16px;
 	line-height:1.5em;
 	text-align:center;
 }
 td, th, p, h1, h2, h3, h4, h5, h6, label { word-break: break-all; word-wrap: break-word; }
 
 #thread_list{
-	width:100%;
-	background-color:lightgray;
+	text-align:left;
+	margin:0px auto;
+	width:90%;
+	height:3%;
+	background-color:#EFEFEF;
+	font-size:14px;
 }
 
 .thread{
-	width:100%;
-	background-color:lightgray;
+	text-align:left;
+	margin:0px auto;
+	width:90%;
+	background-color:#EFEFEF;
+	font-size:14px;
 }
 
 .title{
@@ -22,11 +29,13 @@ td, th, p, h1, h2, h3, h4, h5, h6, label { word-break: break-all; word-wrap: bre
 
 }
 .name{
-	font-size:16px;
+	font-size:14px;
 }
+
 
 #name{
 	color:green;
+	font-size:14px;
 }
 
 #title{
@@ -37,20 +46,35 @@ td, th, p, h1, h2, h3, h4, h5, h6, label { word-break: break-all; word-wrap: bre
 	font-size:14px;
 }
 #form_name{
-	width:500px;
-	height:30px;
+	width:70%;
+	height:10%;
 }
 
 #form_email{
-	width:500px;
-	height:30px;
+	width:70%;
+	height:20%;
 }
 textarea{
-	width:400px;
-	height:100px;
+	width:90%;
+	height:20%;
 }
+
+.form{
+	margin:0px auto;
+}	
 
 .error{
 	color:red;
 }
 
+#main{
+	text-align:center;
+	width:100%;
+}
+
+#sp_link{
+	text-align:left;
+	margin:0px auto;
+	width:80%;
+	border:solid 1px;
+}

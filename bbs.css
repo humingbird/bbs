@@ -1,17 +1,20 @@
 body{
+	background-image:url('./img/ba.gif');
 	width:100%;
-	background-color:lightgray;
 }
 
 .thread{
-	margin-top:5px;
+	text-align:left;
+	margin:0px auto;
+	/*margin-top:5px;*/
 	width:700px;
-	background-color:ghostwhite;
+	background-color:#EFEFEF;
+	border:groove 3px #000000;
 	
 }
 
 .comment{
-	background-color:ghostwhite;
+	background-color:#EFEFEF;
 	margin: 1px 5px 2px 5px;
 }
 
@@ -40,8 +43,11 @@ body{
 }
 
 #thread_list{
+	text-align:left;
+	margin:0px auto;
 	width:700px;
-	background-color:ghostwhite;
+	background-color:#ccffcc;
+	border:groove 3px #000000;
 }
 
 #form_name{
@@ -52,3 +58,14 @@ body{
 	display:none;
 }
 
+#main{
+	text-align:center;
+	width:100%;
+}
+
+#regist_thread{
+	text-align:left;
+	margin:0px auto;
+	width:700px;
+	background-color:#EFEFEF;
+}

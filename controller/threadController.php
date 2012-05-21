@@ -56,8 +56,18 @@ if(!Config::$debug){
 			}else{
 				$login = 1; //ローカル上では常にログイン設定
 				$profile = '';
+			}
+			
+			//UAの取得
+			$ua = $_SERVER['HTTP_USER_AGENT'];
+			//PC/Android/iPhoneのパターンわけ
+			$deviceType = $this->util->setDeviceType($ua);
+		
+			//スマートフォンの場合はfbログインページをモバイル用ページにする
+			if($deviceType != 'pc' && $url !=''){
+				$url = str_replace('www','m',$url);
 			}	
-			$this->view->display('thread',array('home'=>Config::$home_url,'login'=>$login,'fb_url'=>$url,'profile'=>$profile));
+			$this->view->display('thread',array('home'=>Config::$home_url,'login'=>$login,'fb_url'=>$url,'profile'=>$profile,'device'=>$deviceType));
 		}
 		/**
 		 * 処理の実行

@@ -49,8 +49,7 @@
 				</br>
 			{/foreach}
 			{/if}
-		</div>
-		<div id="sp_link">もっとみる</div>
+		<div id="sp_link">次の１０件</div>
 		<!-- ここからコメント投稿 -->
 		</br>
 		<div>
@@ -59,9 +58,14 @@
 				<form method="POST" action="?page=list&regist=1">
 					<div id="form_name">名前<input type="text" name="name"{if $profile.id}value="{$profile.id}"{/if}></div>
 					<div id="form_email">email<input type="text" name="email"></div>
-					<div>コメント</br>
-						<textarea name="comment" cols=40 rows=4 wrap="hard"></textarea>
-					</div>
+					{if $device  =='pc'}
+						<div id="text_area">コメント</br>
+							<textarea name="comment" wrap="hard"></textarea>
+						</div>
+					{else}
+						コメント</br>
+						<textarea name="comment"wrap="hard"></textarea>
+					{/if}
 					<div><input type="submit" value="投稿"></div>
 					<input type="hidden" name="threadId" value="{$info.id}">
 					{if $profile.link}<input type="hidden" name="fb_url" value="{$profile.link}">{/if}
@@ -69,9 +73,9 @@
 			{else}
 					このスレッドの書き込みは1000件を越えたので書き込みできません。
 			{/if}
+			<div><a href="./">topに戻る</a>
 				</div>
 			<!-- ここまでコメント投稿 -->
-
-		<div><a href="./">topに戻る</a>
+		</div>
 	</body>
 </html>

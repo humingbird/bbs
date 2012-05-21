@@ -9,17 +9,16 @@
 		<meta name="viewport" content="width=device-width">
 		<script type="text/javascript" src = "bbs.js"></script>
 	</head>
-	<body onload="displayError()" style="background-color:lightgray;">
+	<body onload="displayError()">
+		<div id="regist_thread">
 		<h3>新規スレッド作成</h3>
 		<h5>必要事項を記入して、作成ボタンを押してください</h5>
 		<div class="error" id="error"></div>
 		<form method="POST" action="?page=thread&regist=1">
 			<div>タイトル</br>
 				<input type="text" name="title"></div>
-			</div>
 			<div>名前</br>
 				<input type="text" name="name" {if $profile.id}value="{$profile.id}"{/if}></div>
-			</div>
 			<div>email</br>
 				<input type="text" name="email">
 			</div>
@@ -31,5 +30,6 @@
 		</form>
 		<div id="fb_login">{if !$login}<a href="{$fb_url}">fbログイン</a>{/if}
 		<a href="{$home}">topに戻る</a>
+		</div>
 	</body>
 </html>
