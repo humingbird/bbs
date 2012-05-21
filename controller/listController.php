@@ -57,6 +57,17 @@ class listController{
 			$login =1;
 			$profile='';
 		}
+		
+		//UAの取得
+		$ua = $_SERVER['HTTP_USER_AGENT'];
+		//PC/Android/iPhoneのパターンわけ
+		$deviceType = $this->util->setDeviceType($ua);
+		
+		//スマートフォンの場合はfbログインページをモバイル用ページにする
+		if($deviceType != 'pc' && $url !=''){
+			$url = str_replace('www','m',$url);
+		}
+		
 		//threadIdをもとにthread_infoとcommentテーブルの情報を取得する
 		$threadId = $_GET['id'];
 		
@@ -66,7 +77,6 @@ class listController{
 		}
 		$commentData = $this->comment->select($threadId);
 		$comment = unserialize($commentData['comment']);
-		
 		if($comment){
 			$comment = $this->util->checkCommentLink($comment);
 			$comment = $this->util->checkComment($comment);
@@ -78,7 +88,7 @@ class listController{
 		//表示件数を制限する（nullの場合は何もしないで返す）
 		$comment = $this->setDisplayComment($comment,$limit);
 
-		$this->view->display('list',array('info'=>$info,'comment'=>$comment,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'profile'=>$profile));
+		$this->view->display('list',array('info'=>$info,'comment'=>$comment,'login'=>$login,'login_url'=>$url,'flag'=>$flag,'profile'=>$profile,'device'=>$deviceType));
 	}
 
 	/**

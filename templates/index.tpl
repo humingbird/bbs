@@ -17,8 +17,12 @@
 			});
 			function displayThreadList(e){
 					$.getJSON("http://49.212.148.198/bbs/api/threadList.php?next=2",function(data){
-						//新規スレッドの下に新しく１０件分追加する
-						var num = 10;
+						$.getJSON("http://49.212.148.198/bbs/api/login.php",function(login){
+						 			if(login.login && login.profile.id){
+						 				var defaultName = login.profile.id;
+									}
+						//新規スレッドの下に新しく5件分追加する
+						var num = 5;
 						for(var i=0;i<data.length;i++){
 						 	$("#sp_link").before('<div class="thread" id ="thread_' + num + '"></div></br>');
 						 	$("#thread_" + num).append('<div class="title"><h4>No:' + data[i].id + '  <a href="?page=list&id=' + data[i].id + '">' + data[i].title + '</a></h4></div>');
@@ -37,37 +41,51 @@
 						 		$("#date_" + data[i].id).before('   <a href="' + data[i].fb_url + '">facebook</a>');
 						 	}
 						 	$("#thread_" + num).append('<div>' + data[i].description + '</div></br>');
-						 	
 						 	var id;
-						 	for(var n =0;n<data[i].responce.length;n++){
-						 		$("#thread_" + num).append('<div class="comment" id="comment_' + num + '"></div>');
-						 		if(data[i].responce[n].name !=null){
-						 			name = data[i].responce[n].name;
-						 		}else{
-						 			name = '名無しさん';
+						 	if(data[i].responce != null){
+						 		for(var n =0;n<data[i].responce.length;n++){
+						 			$("#thread_" + num).append('<div class="comment" id="comment_' + num + '"></div>');
+						 			if(data[i].responce[n].name){
+						 				name = data[i].responce[n].name;
+						 			}else{
+						 				name = '名無しさん';
+						 			}
+						 			id = data[i].responce[n].id + 1;
+						 			$("#comment_" + num).append('<div class="name">' + id + '名前:<span class = "span_name_c_' + data[i].id + '_' + data[i].responce[n].id + '" id=name>' + name + '</span><span class="date" id="date_' + data[i].id + '_' + data[i].responce[n].id + '">投稿日時:' + data[i].responce[n].created + '</span></div>');
+						 			if(data[i].responce[n].email !=''){
+						 				$(".span_name_c_" + data[i].id + '_' + data[i].responce[n].id).wrap('<a href="mailto:' + data[i].responce[n].email + '"></a>');
+						 			}
+						 			if(data[i].responce[n].fb_url != null){
+						 				$("#date_" + data[i].id + '_' + data[i].responce[n].id).before('   <a href="' + data[i].responce[n].fb_url + '">facebook</a>');
+						 			}
+						 			$("#comment_" + num).append('<div>' + data[i].responce[n].description + '</div></br>');
 						 		}
-						 		id = data[i].responce[n].id + 1;
-						 		$("#comment_" + num).append('<div class="name">' + id + '名前:<span class = "span_name_c_' + num + '" id=name>' + name + '</span><span class="date" id="date_' + num + '">投稿日時:' + data[i].responce[n].created + '</span></div>');
-						 		if(data[i].responce[n].email !=''){
-						 			$(".span_name_c_" + num).wrap('<a href="mailto:' + data[i].responce[n].email + '"></a>');
-						 		}
-						 		if(data[i].responce[n].fb_url){
-						 			$("#date_" + num).before('   <a href="' + data[i].responce[n].fb_url + '">facebook</a>');
-						 		}
-						 		$("#comment_" + num).append('<div>' + data[i].responce[n].description + '</div></br>');
 						 	}
 						 	$("#thread_" + num).append('<div id="list_nav"><a href="?page=list&id=' + data[i].id + '">全て表示する</a>  <a href="?page=list&id=' + data[i].id + '&limit=50">最新50件</a>  <a href="?page=list&id=' + data[i].id + '&limit=100">1-100</a>  <a href="#">板のトップ</a>  <a href="">リロード</a></div>');
 						 	$("#thread_" + num).after('<div class="form" id="form_' + num + '">');
 						 	//１０００件投稿フラグと,fbログイン状態を取得する何かを作る
-						 	/*$("#form_" + num).append('<div class="error" id="error_' + data[i].id + '"></div>');
-							$("#form_" + num).append('<form method="POST" action="?regist=1" id = "input_comment_' + num + '"></form>');
-							$("#input_comment_" + num).append('<div id="form_name">名前<input type="text" name="name"></div>');
-							$("#input_comment_" + num).append('<div id="form_email">email<input type="email" name="email"></div>');
-							$("#input_comment_" + num).append('<div>コメント</br><textarea name="comment" cols=40 rows=4></textarea></div>');
-							$("#input_comment_" + num).append('<div><input type="submit" value="投稿"></div>');
-							$("#input_comment_" + num).append('<input type="hidden" name="threadId" value="' + data[i].id + '"></div>');*/
+						 	//$("#form_" + num).append('<div class="error" id="error_' + data[i].id + '"></div>');
+						 	if(data[i].flag != 1){
+									$("#form_" + num).append('<form method="POST" action="?regist=1&mode=sp" id = "input_comment_' + num + '"></form>');
+									if(defaultName){
+										$("#input_comment_" + num).append('<div id="form_name">名前<input type="text" name="name" value="' + defaultName + '"></div>');
+									}else{
+										$("#input_comment_" + num).append('<div id="form_name">名前<input type="text" name="name"></div>');
+									}
+									$("#input_comment_" + num).append('<div id="form_email">email<input type="email" name="email"></div>');
+									$("#input_comment_" + num).append('<div>コメント</br><textarea name="comment" cols=40 rows=4></textarea></div>');
+									$("#input_comment_" + num).append('<div><input type="submit" value="投稿"></div>');
+									$("#input_comment_" + num).append('<input type="hidden" name="threadId" value="' + data[i].id + '"></div>');
+									if(login.login && login.profile.link){
+										$("#input_comment_" + num).append('<input type="hidden" name="fb_url" value="' + login.profile.link + '"></div>');
+									}
+							}
+							if(!login.login){
+								$("#form_" + num).after('<div id="fb_login"><a href="' + login.url + '">fbログイン</a></div>');
+							}
 						 	num = num + 1;
 						 }
+						});
 					});
 					$("#sp_link").css('display','none');
 			}

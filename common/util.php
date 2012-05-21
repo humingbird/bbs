@@ -11,9 +11,10 @@ class Util{
 	 *
 	 * @params array  $postData  postされたスレッドデータ
 	 * @params string $page      エラー時にリダイレクトするページ名
+	 * @params string $mode      リダイレクト方法を分ける（sp:リストページに飛ばす）
 	 * @return array 			チェックを通ったデータ
 	 */
-	public function checkParams($postData,$page=null){
+	public function checkParams($postData,$page=null,$mode = null){
 			//名前だけはバリデーション処理後に最大文字数で切り取る
 			if(mb_strlen($postData['name'])>20){
 				$postData['name'] = mb_substr ($postData['name'],0,20);
@@ -21,9 +22,9 @@ class Util{
 			foreach($postData as $key=>$value){
 				$postData[$key] = htmlspecialchars($value);
 			}
-			$this->checkUndefined($postData,$page);
-			$this->countWords($postData,$page);
-			$this->checkEmail($postData['email'],$page,$postData['threadId']);
+			$this->checkUndefined($postData,$page,$mode);
+			$this->countWords($postData,$page,$mode);
+			$this->checkEmail($postData['email'],$page,$postData['threadId'],$mode);
 			return $postData;
 		}
 	
@@ -32,8 +33,9 @@ class Util{
 	 *
 	 * @params array  $postData  postされたスレッドデータ
 	 * @params string $page      エラー時にリダイレクトするページ名
+	 * @params string $mode      リダイレクト先を分ける
 	 */
-	public function checkUndefined($postData,$page){
+	public function checkUndefined($postData,$page,$mode){
 		$check = false;
 
 		if($postData['title'] === ""){
@@ -50,11 +52,12 @@ class Util{
 				$error = $error.$key.'='.$value.'&';
 			}
 			$error = rtrim($error,'&');
-			
 			if($page && $page != 'list'){
 				$param = '?page='.$page.'&'.$error;
-			}else if($page === 'list'){
+			}else if($page && $page === 'list'){
 				$param = '?page='.$page.'&id='.$postData['threadId'].'&'.$error.'#error_'.$postData['threadId'];
+			}else if($mode === 'sp'){
+				$param = '?page=list&'.$error.'&id='.$postData['threadId'].'#error_'.$postData['threadId'];
 			}else{
 				$param = '?'.$error.'&id='.$postData['threadId'].'#error_'.$postData['threadId'];
 			}
@@ -69,7 +72,7 @@ class Util{
 	 * @params array $postData  postされたスレッドデータ
 	 * @params string $page      エラー時にリダイレクトするページ名
 	 */
-	public function countWords($postData,$page){
+	public function countWords($postData,$page,$mode){
 		$check = false;
 			
 		if(array_key_exists('title',$postData)){
@@ -99,8 +102,10 @@ class Util{
 			
 			if($page && $page != 'list'){
 				$param = '?page='.$page.'&'.$error;
-			}else if($page === 'list'){
+			}else if($page && $page === 'list'){
 				$param = '?page='.$page.'&id='.$postData['threadId'].'&'.$error.'#error_'.$postData['threadId'];
+			}else if($mode === 'sp'){
+				$param = '?page=list&'.$error.'&id='.$postData['threadId'].'#error_'.$postData['threadId'];
 			}else{
 				$param = '?'.$error.'&id='.$postData['threadId'].'#error_'.$postData['threadId'];
 			}
@@ -116,7 +121,7 @@ class Util{
 	 * @params string $page      遷移するページ名
 	 * @params string $threadId  スレッドid
 	 */
-	public function checkEmail($email,$page,$threadId){
+	public function checkEmail($email,$page,$threadId,$mode){
 		$check = false;
 		
 		if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $email) && $email) {
@@ -132,8 +137,10 @@ class Util{
 			
 			if($page && $page != 'list'){
 				$param = '?page='.$page.'&'.$error;
-			}else if($page === 'list'){
+			}else if($page && $page === 'list'){
 				$param = '?page='.$page.'&id='.$threadId.'&'.$error.'#error_'.$threadId;
+			}else if($mode === 'sp'){
+				$param = '?page=list&'.$error.'&id='.$threadId.'#error_'.$threadId;
 			}else{
 				$param = '?'.$error.'&id='.$threadId.'#error_'.$threadId;
 			}

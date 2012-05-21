@@ -66,31 +66,43 @@ class indexController{
 		
 		//UAの取得
 		$ua = $_SERVER['HTTP_USER_AGENT'];
-		//PC/Android/iPhoneかが分かるように正規表現分岐とか作る
+		//PC/Android/iPhoneのパターンわけ
 		$deviceType = $this->util->setDeviceType($ua);
 		
-		//スレッド情報の取得(PCは最新10件,spは５件ずつ表示（CSS側で表示制御）
-		$list = $this->threadInfo->selectThreadList();
+		//スマートフォンの場合はfbログインページをモバイル用ページにする
+		if($deviceType != 'pc' && $url !=''){
+			$url = str_replace('www','m',$url);
+		}
+		
+		//スレッド情報の取得(PCは最新10件,spは５件ずつ表示
+		if($deviceType === 'pc'){
+			echo 'pc mode';
+			$list = $this->threadInfo->selectThreadList();
+		}else{
+			$list = $this->threadInfo->selectThreadList(5);
+		}
 		//スレッドごとのコメント情報の取得
 		foreach($list as $key=>$value){
 			$comment[] = $this->comment->select((int)$value['id']);
 		}
 		foreach($comment as $key=>$value){
-			if($value['comment'] !=''){
+			if($value['comment'] !='' || $comment[$key] != false){
 				$commentList[$value['thread_id']] = unserialize($value['comment']);
 			}
 		}
-		foreach($commentList as $key=>$value){
-			$flag[$key] = 0;
-			if(count($value) > Config::MAXCOUNT){
-				$flag[$key] = 1;
-			}
-			$value = $this->util->sortComment($value,10);
+		if($commentList){
+			foreach($commentList as $key=>$value){
+				$flag[$key] = 0;
+				if(count($value) > Config::MAXCOUNT){
+					$flag[$key] = 1;
+				}
+				$value = $this->util->sortComment($value,10);
 			
-			//コメントの内容チェック（urlリンク）
-			$value = $this->util->checkCommentLink($value);
-			$value = $this->util->checkComment($value);
-			$commentList[$key] = $value;
+				//コメントの内容チェック（urlリンク）
+				$value = $this->util->checkCommentLink($value);
+				$value = $this->util->checkComment($value);
+				$commentList[$key] = $value;
+			}
 		}
 		//スレッド一覧用
 		$titleList = $this->threadInfo->selectTitleList();
@@ -103,11 +115,13 @@ class indexController{
  	 * コメントの登録処理
 	 */	
 	public function regist(){
+		//getパラメータの確認
+		$mode = $_GET['mode'];
 		//postされた要素を取得
 		$postData = $_POST;
 
 		//バリデーション処理
-			$postData = $this->util->checkParams($postData);
+			$postData = $this->util->checkParams($postData,null,$mode);
 		//update
 			$this->comment->insert($postData['threadId'],$postData);
 		//スレッドの更新時刻もupdate

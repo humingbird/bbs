@@ -10,6 +10,7 @@ class threadInfo{
 	const NEW_THREAD = 'new_thread';
 	const THREAD  = 'thread_';
 	const TITLE_LIST = 'title_list';
+	const SP_NEW_THREAD = 'sp_mew_thread';
 	
 	private $memcache;
 
@@ -41,6 +42,7 @@ class threadInfo{
 		if($pastData = $this->memcache->get(self::NEW_THREAD)){
 			$this->memcache->delete(self::NEW_THREAD);
 			$this->memcache->delete(self::TITLE_LIST);
+			$this->memcache->delete(self::SP_NEW_THREAD);
 		}
 		return $state;
 	}
@@ -74,20 +76,35 @@ class threadInfo{
 	 */
 	public function selectThreadList($limit = 10){
 		//memcacheにデータが無いか探しに行く
-		if(!$row = $this->memcache->get(self::NEW_THREAD)){
-			$sql = sprintf('select * from thread_info order by id desc limit %d',$limit);	
-			
-			//DBの接続
-			$db = new DbConnection;
-			$conn = $db->connect();
-
-			$stmt = $conn->prepare($sql);
+		if($limit == 5){
+			if(!$row = $this->memcache->get(self::SP_NEW_THREAD)){
+				$sql = sprintf('select * from thread_info order by id desc limit %d',$limit);	
+				
+				//DBの接続
+				$db = new DbConnection;
+				$conn = $db->connect();
+				$stmt = $conn->prepare($sql);
     			$stmt->execute();
 
-			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				$this->memcache->set(self::SP_NEW_THREAD,$row);
+			}
+		}else{
+			if(!$row = $this->memcache->get(self::NEW_THREAD)){
+				$sql = sprintf('select * from thread_info order by id desc limit %d',$limit);	
+			
+				//DBの接続
+				$db = new DbConnection;
+				$conn = $db->connect();
 
-			//取得したデータをmemcacheにセットする
-			$this->memcache->set(self::NEW_THREAD,$row);
+				$stmt = $conn->prepare($sql);
+    			$stmt->execute();
+
+				$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+				//取得したデータをmemcacheにセットする
+				$this->memcache->set(self::NEW_THREAD,$row);
+			}
 		}
 
 		return $row;
@@ -157,14 +174,15 @@ class threadInfo{
 	}
 	
 	/**
-	 * 指定数*10件目までのスレッド一覧を１０件取得する
+	 * 指定数*10件目までのスレッド一覧を5件取得する(sp用）
 	 *
 	 * @params int $next  指定数
 	 * @return array スレッド一覧
 	 */
 	public function selectNextList($next){
-		$start = 10*$next-10;
-		$end = 10*$next;
+		$start = 5*$next-5;
+		$end = 5;
+		
 		$sql = sprintf('select * from `thread_info` order by `created` desc limit %d,%d',$start,$end);
 		
 		//DBの接続
