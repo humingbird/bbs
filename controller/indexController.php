@@ -56,7 +56,7 @@ class indexController{
 				$url = $this->fb->getLoginUrl();
 				$profile='';
 			}else{
-				$url='';
+				$url= '';
 				$profile = $this->fb->getUserInfo();
 			}
 		}else{
@@ -77,9 +77,9 @@ class indexController{
 		//スレッド情報の取得(PCは最新10件,spは５件ずつ表示
 		if($deviceType === 'pc'){
 			echo 'pc mode';
-			$list = $this->threadInfo->selectThreadList();
+			$list = $this->threadInfo->selectUpdateList();
 		}else{
-			$list = $this->threadInfo->selectThreadList(5);
+			$list = $this->threadInfo->selectUpdateList(5);
 		}
 		//スレッドごとのコメント情報の取得
 		foreach($list as $key=>$value){

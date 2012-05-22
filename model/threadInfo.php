@@ -11,6 +11,7 @@ class threadInfo{
 	const THREAD  = 'thread_';
 	const TITLE_LIST = 'title_list';
 	const SP_NEW_THREAD = 'sp_mew_thread';
+	const UPDATE_THREAD = 'update_thread';
 	
 	private $memcache;
 
@@ -39,10 +40,11 @@ class threadInfo{
 		$state = $this->pdoExecute($sql,$params);
 
 		//新規登録後はリストが変わるのでキャッシュを削除する
-		if($pastData = $this->memcache->get(self::NEW_THREAD)){
+		if($pastData = $this->memcache->get(self::NEW_THREAD) || $pastData = $this->memcache->get(self::UPDATE_THREAD)){
 			$this->memcache->delete(self::NEW_THREAD);
 			$this->memcache->delete(self::TITLE_LIST);
 			$this->memcache->delete(self::SP_NEW_THREAD);
+			$this->memcache->delete(self::UPDATE_THREAD);
 		}
 		return $state;
 	}
@@ -110,6 +112,29 @@ class threadInfo{
 		return $row;
 	}
 	
+	/**
+	 * 更新時刻順でスレッド一覧を取得する
+	 * 
+	 * @params int $limit 取得件数
+	 * @return array      スレッド情報
+	 */
+	public function selectUpdateList($limit = 10){
+		if(!$row = $this->memcache->get(self::UPDATE_THREAD)){
+			$sql = sprintf('select * from `thread_info` order by `updated` desc limit %d',$limit);
+			
+			//DBの接続
+			$db = new DbConnection;
+			$conn = $db->connect();
+
+			$stmt = $conn->prepare($sql);
+    		$stmt->execute();
+
+			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			
+			$this->memcache->set(self::UPDATE_THREAD,$row);
+		}
+		return $row;
+	}
 	
 	/**
 	 * idから情報を取得する

@@ -5,6 +5,7 @@
 class comment{
 	
 	const COMMENT = 'comment_';
+	const UPDATE_THREAD = 'update_thread';
 	private $memcache;
 
 	//コンストラクタ
@@ -57,6 +58,9 @@ class comment{
 		//新規登録後は現在のキャッシュを削除
 		if($cache = $this->memcache->get(self::COMMENT.$threadId)){
 			$this->memcache->delete(self::COMMENT.$threadId);
+			if($pastData = $this->memcache->get(self::UPDATE_THREAD)){
+				$this->memcache->delete(self::UPDATE_THREAD);
+			}
 		}
 		return $state;
 	}
