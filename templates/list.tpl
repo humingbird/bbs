@@ -12,7 +12,7 @@
 		<script type="text/javascript" src = "bbs.js"></script>
 		<script type="text/javascript">
 			$(function(){
-				var link = $("#sp_link")[0];
+				var link = $("#sp_next")[0];
 				link.addEventListener("touchstart",displayComment,false);
 			});
 			
@@ -38,19 +38,21 @@
 			<div class="title"><h4>No:{$info.id}    <span id=title>{$info.title}</span></h4></div>
 			<div class="name" id="thread_info">1 名前:{if $info.email}<a href="mailto:{$info.email}">{/if}{if $info.name}<span id=name>{$info.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $info.email}</a>{/if}
 			{if $info.fb_url}<a href="{$info.fb_url}">facebook</a>{/if}  <span class="date">投稿日時：{$info.created}</span></div>
-				<div>{$info.description}</div>
+				<div>
+<pre>{$info.description}</pre></div>
 			</br>
 			{if $comment}
 			{foreach from=$comment key=k item=v}
 				<div class="comment" {if $device != 'pc' && $k>9} style="display:none;"{/if} id="c_{$k}">
 					<div>{$k + 2} 名前:{if $v.email}<a href="mailto:{$v.email}">{/if}{if $v.name}<span id=name>{$v.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $v.email}</a>{/if} 
 						{if $v.fb_url}<a href="{$v.fb_url}">facebook</a>{/if}   <span class="date">投稿日時：{$v.created}</span></div>
-					<div>{$v.description}</div>
+					<div>
+<pre>{$v.description}</pre></div>
 				</div>
 				</br>
 			{/foreach}
 			{/if}
-		<div id="sp_next">次の１０件</div>
+		<div id="sp_next" style="border:solid 1px;">次の１０件</div>
 		<!-- ここからコメント投稿 -->
 		</br>
 		<div>

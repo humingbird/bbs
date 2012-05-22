@@ -116,7 +116,7 @@
 				<div class="name">1 名前:{if $val.email}<a href='mailto:{$val.email}'>{/if}{if $val.name}<span id=name>{$val.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $val.email}</a>{/if}
 					{if $val.fb_url}<a href="{$val.fb_url}">facebook</a>{/if}   <span class="date">投稿日時:{$val.created}</span></div>
 				<div>
-					{$val.description}
+<pre>{$val.description}</pre>
 				</div>
 				</br>				
 				<!-- ここから最大10件表示 -->
@@ -125,7 +125,9 @@
 						<div class="name">{$c.id +1} 名前:{if $c.email}<a href='mailto:{$c.email}'>{/if}{if $c.name}<span id=name>{$c.name}</span>{else}<span id=name>名無しさん</span>{/if}{if $c.email}</a>{/if}  
 							{if $c.fb_url}<a href="{$c.fb_url}">facebook</a>{/if}<span class="date">投稿日時:{$c.created}</span></div>
 						<div>
-							{$c.description}
+<pre>
+{$c.description}
+</pre>
 						</div>
 					</div>
 					</br>
