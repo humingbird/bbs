@@ -26,7 +26,7 @@ class indexController{
 		
 		$this->view = new View;
 		$this->util = new Util;
-	
+
 		//ログインエラー時はエラーページに遷移
 		$error = $_GET['error_reason'];
 		if($error){
@@ -38,8 +38,12 @@ class indexController{
 		$this->comment = new comment;
 		
 		$path = $_GET['regist'];
+		$mode = $_GET['mode'];
 		if($path == 1){
 			$this->regist();
+		}else if($mode === 'logout'){
+			$this->logout();
+			$this->exec();
 		}else{
 			$this->exec();
 		}
@@ -56,7 +60,7 @@ class indexController{
 				$url = $this->fb->getLoginUrl();
 				$profile='';
 			}else{
-				$url= '';
+				$url= '?mode=logout';
 				$profile = $this->fb->getUserInfo();
 			}
 		}else{
@@ -75,12 +79,12 @@ class indexController{
 		}
 		
 		//スレッド情報の取得(PCは最新10件,spは５件ずつ表示
-		if($deviceType === 'pc'){
-			echo 'pc mode';
-			$list = $this->threadInfo->selectUpdateList();
-		}else{
+		//if($deviceType === 'pc'){
+			//echo 'pc mode';
+			//$list = $this->threadInfo->selectUpdateList();
+		//}else{
 			$list = $this->threadInfo->selectUpdateList(5);
-		}
+		//}
 		//スレッドごとのコメント情報の取得
 		foreach($list as $key=>$value){
 			$comment[] = $this->comment->select((int)$value['id']);
@@ -129,6 +133,13 @@ class indexController{
 		
 		//topページにリダイレクト
 			header("Location:".Config::$home_url);
+	}
+	
+	/**
+	 * fbログアウト処理
+	 */
+	public function logout(){
+		$this->fb->fbLogout();
 	}
 	
 	public function error(){

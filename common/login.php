@@ -50,5 +50,12 @@ class fbLogin {
 		$me = $this->fb->api('/me');
 		return $me;
 	}
+	
+	/**
+	 * fbからログアウト
+	 */
+	public function fbLogout(){
+		$this->fb->destroySession();
+	}
 
 }

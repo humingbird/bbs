@@ -9,14 +9,17 @@
 		<style type="text/css">
 			@import url("bbs.css") screen and (min-width:960px);
 			@import url("bbs_sp.css") screen and (max-width:480px);
+			@import url("bbs_sp.css") screen and (max-width:768px);
 		</style>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<script type="text/javascript" src ="jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src = "bbs.js"></script>
 		<script type="text/javascript">
 			$(function(){
-				var link = $("#sp_link")[0];
-				link.addEventListener("touchstart",displayThreadList,false);
+				if(navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('Android') >0){
+					var link = $("#sp_link")[0];
+					link.addEventListener("touchstart",displayThreadList,false);
+				}
 			});
 			function displayThreadList(e){
 					$.getJSON("http://49.212.148.198/bbs/api/threadList.php?next=2",function(data){
@@ -144,7 +147,7 @@
 						<input type="hidden" name="threadId" value="{$val.id}">
 						{if $profile.link}<input type="hidden" name="fb_url" value="{$profile.link}">{/if}
 					</form>
-					<div id="fb_login">{if !$login}<a href="{$login_url}">fbログイン</a>{/if}</div>
+					<div id="fb_login">{if !$login}<a href="{$login_url}">fbログイン</a>{else}<a href="{$login_url}">fbログアウト</a>{/if}</div>
 					{else}
 						このスレッドの書き込みは1000件を越えたので書き込みできません。
 					{/if}
@@ -162,7 +165,7 @@
 		{/foreach}
 		<!-- インデックス表示ここまで -->
 		</br>
-		<div id="sp_link" height="50%">もっと見る</a></div>
+		<div id="sp_link" height="50%">{if $device == "pc"}<a href="#sp_link" onclick="displayThreadList()">{/if}もっと見る{if $device == "pc"}</a>{/if}</div>
 		<!-- スレッド作成遷移 -->
 		<div id="footer"><a href="?page=thread">新規スレッド作成</a></div>
 		<!-- スレッド作成遷移ここまで -->

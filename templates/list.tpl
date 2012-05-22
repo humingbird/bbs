@@ -5,6 +5,7 @@
 		<style type="text/css">
 			@import url("bbs.css") screen and (min-width:960px);
 			@import url("bbs_sp.css") screen and (max-width:480px);
+			@import url("bbs_sp.css") screen and (max-width:768px);
 		</style>
 		<meta name="viewport" content="width=device-width">
 		<script type="text/javascript" src ="jquery-1.7.2.min.js"></script>
@@ -49,7 +50,7 @@
 				</br>
 			{/foreach}
 			{/if}
-		<div id="sp_link">次の１０件</div>
+		<div id="sp_next">次の１０件</div>
 		<!-- ここからコメント投稿 -->
 		</br>
 		<div>
