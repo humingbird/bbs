@@ -1,22 +1,22 @@
-�f����
+掲示板
 ================
-�^�f�����ۂ����������f���ł��B  
-��邭FB�A�g�����Ă��܂��B
+某掲示板っぽい動作をする掲示板です。  
+ゆるくFB連携もしています。
 
-�K�v�Ȃ���
+必要なもの
 -----------
-�ȉ��̂��̂��g���Ă�̂Ŋe���ǉ����Ă�������  
-�Esmarty  
+以下のものを使ってるので各自追加してください  
+・smarty  
 http://www.smarty.net/  
-�Efacebook php-sdk  
+・facebook php-sdk  
 https://github.com/facebook/php-sdk  
-�EjQuery
+・jQuery
 http://jquery.com/  
-�Ecss3-mediaqueries.js  
+・css3-mediaqueries.js  
 http://code.google.com/p/css3-mediaqueries-js/  
 
-�g����
+使い方
 --------
-1.config/bbsConf.template.php��config/bbsConf.php�Ƀ��l�[��  
-2.bbsConf.php���Ŏ����̊��ɍ��킹�ăp�X���w�肷��  
-3.index.php common/router.php��require�̃p�X�������̊��ɍ��킹��  
+1.config/bbsConf.template.phpをconfig/bbsConf.phpにリネーム  
+2.bbsConf.php内で自分の環境に合わせてパスを指定する  
+3.index.php common/router.phpのrequireのパスを自分の環境に合わせる  
