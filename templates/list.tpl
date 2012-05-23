@@ -1,6 +1,9 @@
 <html>
 	<head>
 		<title>掲示板:{$info.title}</title>
+		<!--[if lt IE 9]>
+			<script src="css3-mediaqueries.js" type="text/javascript"></script>
+		<![endif]-->
 		<!-- スマートフォンとPCで読み込むCSSファイルを変える -->
 		<style type="text/css">
 			@import url("bbs.css") screen and (min-width:960px);
