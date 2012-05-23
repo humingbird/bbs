@@ -1,7 +1,6 @@
 掲示板
 ================
 某掲示板っぽい動作をする掲示板です。  
-ゆるくFB連携もしています。
 
 必要なもの
 -----------
@@ -14,6 +13,7 @@ https://github.com/facebook/php-sdk
 http://jquery.com/  
 ・css3-mediaqueries.js  
 http://code.google.com/p/css3-mediaqueries-js/  
+・memcache  
 
 使い方
 --------
