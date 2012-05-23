@@ -1,0 +1,22 @@
+掲示板
+================
+某掲示板っぽい動作をする掲示板です。  
+ゆるくFB連携もしています。
+
+必要なもの
+-----------
+以下のものを使ってるので各自追加してください  
+・smarty  
+http://www.smarty.net/  
+・facebook php-sdk  
+https://github.com/facebook/php-sdk  
+・jQuery
+http://jquery.com/  
+・css3-mediaqueries.js  
+http://code.google.com/p/css3-mediaqueries-js/  
+
+使い方
+--------
+1.config/bbsConf.template.phpをconfig/bbsConf.phpにリネーム  
+2.bbsConf.php内で自分の環境に合わせてパスを指定する  
+3.index.php common/router.phpのrequireのパスを自分の環境に合わせる  
